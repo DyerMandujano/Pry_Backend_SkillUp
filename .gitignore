@@ -1,0 +1,56 @@
+# === SPRING BOOT / MAVEN ===
+/target/
+/build/
+/.m2/
+
+# === MAVEN WRAPPER ===
+/.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# === IDEs ===
+# Eclipse / Spring Tool Suite
+/.settings/
+/.project
+/.classpath
+/.factorypath
+/.metadata/
+/.recommenders/
+/bin/
+.apt_generated
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+/.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+/.vscode/
+
+# === NetBeans ===
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# === SISTEMA OPERATIVO ===
+.DS_Store
+Thumbs.db
+
+# === ARCHIVOS TEMPORALES ===
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# === VARIABLES Y CREDENCIALES ===
+application-local.properties
+application-dev.properties
+*.env
