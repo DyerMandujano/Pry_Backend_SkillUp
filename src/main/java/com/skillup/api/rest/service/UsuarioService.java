@@ -22,7 +22,7 @@ public class UsuarioService {
     
    
 
-    public Persona obtenerPerfil(int idPersona) {
+ public Persona obtenerPerfil(int idPersona) {
         Persona persona = personaRepository.spBuscarPersonaPorID(idPersona);
         if (persona == null) {
             throw new RuntimeException("No se encontró el perfil para el ID " + idPersona);
