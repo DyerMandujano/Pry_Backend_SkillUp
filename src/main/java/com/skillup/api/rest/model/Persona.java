@@ -2,6 +2,8 @@
 package com.skillup.api.rest.model;
 
 // 2. Importaciones de Jakarta Persistence
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,10 +40,11 @@ public class Persona {
     @Column(name = "Apellidos")
     private String apellidos;
     
-    
     @Column(name = "Fecha_de_nacimiento")
     @Temporal(TemporalType.DATE) 
-    private Date fechaDeNacimiento;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // 1. Formato: Esperar YYYY-MM-DD
+    @JsonProperty("fecha_nacimiento") // 2. Mapeo: Mapear del JSON 'fecha_nacimiento' a este campo
+    private Date fechaDeNacimiento; // Campo en Java: fechaDeNacimiento
     
     @Column(name = "Genero")
     private String genero;

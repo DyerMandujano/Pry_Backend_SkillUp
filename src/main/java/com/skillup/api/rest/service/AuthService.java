@@ -139,6 +139,9 @@ public class AuthService {
 
             // 3. Preparar y guardar el Usuario
             usuario.setIdPersona(idPersonaGenerado);
+            
+            usuario.setFecRegistro(new java.util.Date());
+            
             entityManager.persist(usuario);
             
             // 4. Insertar en el Rol Específico

@@ -70,8 +70,7 @@ public class AuthController {
             return ResponseEntity.ok().body("Usuario registrado exitosamente");
             
         } catch (RuntimeException e) {
-            // 3. Si falla (ej: "usuario ya existe"): Devuelve 400 Bad Request
-            // y el mensaje de error
+
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

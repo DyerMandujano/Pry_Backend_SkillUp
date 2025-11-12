@@ -2,6 +2,7 @@
 package com.skillup.api.rest.model;
 
 // 2. Importaciones de Jakarta Persistence
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +33,7 @@ public class Estudiante {
     
     
     @Column(name = "Nivel_Educativo") 
+    @JsonProperty("nivel_educativo") // <--- 2. AÑADIR ESTO
     private String nivelEducativo;
     
     @Column(name = "Estado")

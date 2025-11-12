@@ -19,10 +19,10 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     // 2. Reemplazo de SP_BuscarPersonaPorID
     //    findById() ya hace esto, pero si tu SP es más complejo, lo puedes usar.
     @Procedure(name = "dbo.SP_BuscarPersonaPorID")
-    Persona spBuscarPersonaPorID(Integer idPersona);
+    //Persona spBuscarPersonaPorID(Integer idPersona);
     
     // 3. Reemplazo de SP_UpdatePersonaPorID
-@Procedure(name = "dbo.SP_UpdatePersonaPorID")
+//@Procedure(name = "dbo.SP_UpdatePersonaPorID")
 void spUpdatePersonaPorID(
     @Param("id") Integer idPersona, 
     @Param("nombres") String nombres, 
