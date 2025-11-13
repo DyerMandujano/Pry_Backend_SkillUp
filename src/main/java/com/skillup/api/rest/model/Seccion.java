@@ -1,23 +1,30 @@
 package com.skillup.api.rest.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 
 @Entity
+@Data
 @Table(name = "Seccion")
 public class Seccion {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "Id_Seccion")
-    private int idSeccion;
+    @Column(name = "Id_Seccion")
+    private Integer idSeccion;
+	
+	 @Column(name = "Id_Curso")
+	    private Integer idCurso;
 
-	public int getIdSeccion() {
-		return idSeccion;
-	}
+	    @Column(name = "Nombre_Seccion")
+	    private String nombreSeccion;
 
-	public void setIdSeccion(int idSeccion) {
-		this.idSeccion = idSeccion;
-	}
+	    @Column(name = "Orden_Seccion")
+	    private Integer ordenSeccion;
+
+	    @Column(name = "Estado")
+	    private Integer estado;
 
     
 }

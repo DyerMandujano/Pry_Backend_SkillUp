@@ -30,6 +30,10 @@ public class CursoService {
         return query.getResultList();
     }
     
+    public Curso obtenerCursoPorId(int id) {
+        return cursoRepository.findById(id).orElse(null);
+    }
+    
     // 🔹 Insertar curso mediante SP
     public void insertarCurso(Curso curso) {
         StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_InsertCurso");

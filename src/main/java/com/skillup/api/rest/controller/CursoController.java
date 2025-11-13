@@ -19,6 +19,11 @@ public class CursoController {
 	        return cursoService.listarCursos();
 	    }
 	    
+	    @GetMapping("/{id}")
+	    public Curso obtenerCursoPorId(@PathVariable int id) {
+	        return cursoService.obtenerCursoPorId(id);
+	    }
+	    
 	    @GetMapping("/docente/{idDocente}")
 	    public List<Curso> listarPorDocente(@PathVariable int idDocente) {
 	        return cursoService.listarCursosPorDocente(idDocente);
