@@ -1,5 +1,6 @@
 package com.skillup.api.rest.controller;
 import com.skillup.api.rest.model.Curso;
+import com.skillup.api.rest.model.CursoMatricula;
 import com.skillup.api.rest.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,12 @@ public class CursoController {
 	    public String eliminarCurso(@PathVariable int id) {
 	        cursoService.eliminarCurso(id);
 	        return "🗑️ Curso eliminado correctamente (Estado cambiado a 0).";
+	    }
+	    
+	 // 🔹 Listar cursos matriculados por estudiante
+	    @GetMapping("/matricula/estudiante/{idEstudiante}")
+	    public List<CursoMatricula> listarCursosPorEstudiante(@PathVariable int idEstudiante) {
+	        return cursoService.listarCursosPorMatriculaEst(idEstudiante);
 	    }
 
 

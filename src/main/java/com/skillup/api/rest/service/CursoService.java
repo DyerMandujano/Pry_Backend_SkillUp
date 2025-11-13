@@ -1,5 +1,6 @@
 package com.skillup.api.rest.service;
 import com.skillup.api.rest.model.Curso;
+import com.skillup.api.rest.model.CursoMatricula;
 import com.skillup.api.rest.repository.CursoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -98,6 +99,31 @@ public class CursoService {
         query.setParameter("id", idCurso);
 
         query.execute();
+    }
+    
+    //
+    public List<CursoMatricula> listarCursosPorMatriculaEst(int idEstudiante) {
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_ListarCursosPorMatricula_Est");
+
+        query.registerStoredProcedureParameter("id_estudiante", Integer.class, jakarta.persistence.ParameterMode.IN);
+        query.setParameter("id_estudiante", idEstudiante);
+
+        List<Object[]> results = query.getResultList();
+        List<CursoMatricula> cursos = new java.util.ArrayList<>();
+
+        for (Object[] row : results) {
+        	CursoMatricula curso = new CursoMatricula();
+            curso.setIdEstudiante((Integer) row[0]);
+            curso.setIdCurso((Integer) row[1]);
+            curso.setNombreCurso((String) row[2]);
+            curso.setNivel((String) row[3]);
+            curso.setDuracionMin((Integer) row[4]);
+            curso.setImagenCurso1((String) row[5]);
+            curso.setImagenCurso2((String) row[6]);
+            cursos.add(curso);
+        }
+
+        return cursos;
     }
 
 }
