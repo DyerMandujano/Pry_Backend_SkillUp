@@ -112,7 +112,7 @@ public class CursoService {
         List<CursoMatricula> cursos = new java.util.ArrayList<>();
 
         for (Object[] row : results) {
-        	CursoMatricula curso = new CursoMatricula();
+        CursoMatricula curso = new CursoMatricula();
             curso.setIdEstudiante((Integer) row[0]);
             curso.setIdCurso((Integer) row[1]);
             curso.setNombreCurso((String) row[2]);
