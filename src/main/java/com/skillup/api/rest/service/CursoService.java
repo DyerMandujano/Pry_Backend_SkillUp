@@ -1,6 +1,7 @@
 package com.skillup.api.rest.service;
 import com.skillup.api.rest.model.Curso;
 import com.skillup.api.rest.model.CursoMatricula;
+import com.skillup.api.rest.model.CursoNoMatricula;
 import com.skillup.api.rest.repository.CursoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -120,6 +121,29 @@ public class CursoService {
             curso.setDuracionMin((Integer) row[4]);
             curso.setImagenCurso1((String) row[5]);
             curso.setImagenCurso2((String) row[6]);
+            cursos.add(curso);
+        }
+
+        return cursos;
+    }
+    
+    public List<CursoNoMatricula> listarCursosSinMatricularse(int idEstudiante) {
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_ListarCursosSinMatricularse");
+
+        query.registerStoredProcedureParameter("id_estudiante", Integer.class, jakarta.persistence.ParameterMode.IN);
+        query.setParameter("id_estudiante", idEstudiante);
+
+        List<Object[]> results = query.getResultList();
+        List<CursoNoMatricula> cursos = new java.util.ArrayList<>();
+
+        for (Object[] row : results) {
+        	CursoNoMatricula curso = new CursoNoMatricula();
+            curso.setIdCurso((Integer) row[0]);
+            curso.setNombreCurso((String) row[1]);
+            curso.setNivel((String) row[2]);
+            curso.setDuracionMin((Integer) row[3]);
+            curso.setImagenCurso1((String) row[4]);
+            curso.setImagenCurso2((String) row[5]);
             cursos.add(curso);
         }
 
