@@ -2,6 +2,7 @@
 package com.skillup.api.rest.model;
 
 // 2. Importa las anotaciones de Jakarta Persistence (para Spring Boot 3)
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +35,7 @@ public class Docente {
     private String especialidad;
     
     @Column(name = "Grado_Academico") 
+    @JsonProperty("grado_academico")
     private String gradoAcademico; 
     
     @Column(name = "Firma")
