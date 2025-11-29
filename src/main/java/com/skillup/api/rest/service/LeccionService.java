@@ -26,8 +26,8 @@ public class LeccionService {
 	    
 	    public List<Leccion> listarLeccionesPorSeccion(int idSeccion) {
 	        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_ListarLeccionesporSeccion", Leccion.class);
-	        query.registerStoredProcedureParameter("Id_Seccion", Integer.class, jakarta.persistence.ParameterMode.IN);
-	        query.setParameter("Id_Seccion", idSeccion);
+	        query.registerStoredProcedureParameter("id_seccion", Integer.class, jakarta.persistence.ParameterMode.IN);
+	        query.setParameter("id_seccion", idSeccion);
 	        return query.getResultList();
 	    }
 	    

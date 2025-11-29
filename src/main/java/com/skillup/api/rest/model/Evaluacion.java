@@ -1,9 +1,13 @@
 package com.skillup.api.rest.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "Evaluacion")
 public class Evaluacion {
@@ -13,69 +17,18 @@ public class Evaluacion {
     @Column(name= "Id_Evaluacion")
     private int idEvaluacion;
 
-    @Column(name = "Titulo", nullable = false, length = 50)
+    @Column(name = "Id_Seccion")
+    private int idSeccion;
+    
+    @Column(name = "Titulo", length = 50)
     private String titulo;
 
     @Column(name = "Fecha_Creacion")
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
 
-    @Column(name = "Estado", nullable = false)
+    @Column(name = "Estado")
     private int estado;
 
-    @ManyToOne
-    @JoinColumn(name = "Id_Seccion", nullable = false)
-    private Seccion seccion;
 
-    @OneToMany(mappedBy = "evaluacion")
-    private List<PreguntaEvaluacion> preguntas;
-
-    // Getters y setters
-    public int getIdEvaluacion() {
-        return idEvaluacion;
-    }
-
-    public void setIdEvaluacion(int idEvaluacion) {
-        this.idEvaluacion = idEvaluacion;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
-
-    public Seccion getSeccion() {
-        return seccion;
-    }
-
-    public void setSeccion(Seccion seccion) {
-        this.seccion = seccion;
-    }
-
-    public List<PreguntaEvaluacion> getPreguntas() {
-        return preguntas;
-    }
-
-    public void setPreguntas(List<PreguntaEvaluacion> preguntas) {
-        this.preguntas = preguntas;
-    }
 }
 
