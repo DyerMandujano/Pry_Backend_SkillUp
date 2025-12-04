@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//En EvaluacionController.java
+import com.skillup.api.rest.dtos.ResultadoVerificacionDTO;
+
 @RestController
 @RequestMapping("/api/evaluaciones")
 @CrossOrigin(origins = "http://localhost:4200") // para Angular
@@ -22,6 +25,14 @@ public class EvaluacionController {
     @GetMapping("/seccion/{idSeccion}")
     public List<Evaluacion> listarPorSeccion(@PathVariable int idSeccion) {
         return evaluacionService.MostrarTituloEvaluacionPorSeccion(idSeccion);
+    }
+    
+    // NUEVO: endpoint para verificar aprobación
+    @GetMapping("/verificar/{idEstudiante}/{idEvaluacion}")
+    public ResultadoVerificacionDTO verificarAprobacion(
+            @PathVariable int idEstudiante,
+            @PathVariable int idEvaluacion) {
+        return evaluacionService.verificarAprobacion(idEstudiante, idEvaluacion);
     }
     
 }

@@ -47,9 +47,9 @@ public class RespuestaEstudianteService {
         if (respuesta.getPuntaje() < 0) {
             throw new IllegalStateException("El puntaje no puede ser negativo");
         }
-        if (respuesta.getFecRespuesta()==null) {
-        	throw new IllegalStateException("La fecha no puede ser vacia");
-        }
+        //if (respuesta.getFecRespuesta()==null) {
+        //	throw new IllegalStateException("La fecha no puede ser vacia");
+        //}
 
         int idEst = respuesta.getEstudiante().getIdEstudiante();
         Estudiante est = estudianteRepository.findById(idEst)
@@ -62,6 +62,7 @@ public class RespuestaEstudianteService {
         respuesta.setEstudiante(est);
         respuesta.setOpcionPregunta(op);
         respuesta.setEstado(1);
+        respuesta.setFecRespuesta(new Date());
 
         return respuestaRepository.save(respuesta);
     }
