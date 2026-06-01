@@ -30,6 +30,11 @@ public class SeccionController {
         return seccionService.listarSeccionesPorCurso(idCurso);
     }
 	
+	@GetMapping("/cursoAC/{idCurso}")
+    public List<Seccion> listarActivosPorCurso(@PathVariable int idCurso) {
+        return seccionService.listarSeccionesActivasPorCurso(idCurso);
+    }
+	
 	@GetMapping("/seccion/{id}")
     public Seccion obtenerSeccionPorId(@PathVariable int id) {
         return seccionService.obtenerSeccionPorId(id);

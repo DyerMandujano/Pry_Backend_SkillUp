@@ -29,6 +29,13 @@ public class SeccionService {
         return query.getResultList();
     }
     
+    public List<Seccion> listarSeccionesActivasPorCurso(int idCurso) {
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("SP_ListarSeccionesActivasporCurso", Seccion.class);
+        query.registerStoredProcedureParameter("idCurso", Integer.class, jakarta.persistence.ParameterMode.IN);
+        query.setParameter("idCurso", idCurso);
+        return query.getResultList();
+    }
+    
     public Seccion obtenerSeccionPorId(int id) {
         return seccionRepository.findById(id).orElse(null);
     }
