@@ -1,12 +1,14 @@
 package com.skillup.api.rest.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import com.skillup.api.rest.model.Persona;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.skillup.api.rest.model.Persona;
 
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {

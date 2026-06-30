@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skillup.api.rest.model.Curso;
 import com.skillup.api.rest.model.Seccion;
 import com.skillup.api.rest.service.SeccionService;
 

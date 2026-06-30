@@ -1,10 +1,12 @@
 package com.skillup.api.rest.repository;
 
-import com.skillup.api.rest.model.Certificado;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.util.Optional;
+
+import com.skillup.api.rest.model.Certificado;
 
 public interface CertificadoRepository extends JpaRepository<Certificado, Integer> {
 

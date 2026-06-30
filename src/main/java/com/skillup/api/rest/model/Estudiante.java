@@ -3,13 +3,13 @@ package com.skillup.api.rest.model;
 
 // 2. Importaciones de Jakarta Persistence
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-
 // 3. (Recomendado) Importaciones de Lombok
 import lombok.Data;
 import lombok.NoArgsConstructor;

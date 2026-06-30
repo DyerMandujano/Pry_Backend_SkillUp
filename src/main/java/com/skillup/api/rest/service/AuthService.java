@@ -5,23 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import com.skillup.api.rest.repository.UsuarioRepository;
-import com.skillup.api.rest.repository.PersonaRepository;
-import com.skillup.api.rest.repository.DocenteRepository;
-import com.skillup.api.rest.repository.EstudianteRepository;
-
-
+import com.skillup.api.rest.dtos.LoginRequest;
+import com.skillup.api.rest.dtos.LoginResponse;
+import com.skillup.api.rest.dtos.RegistroRequest;
+import com.skillup.api.rest.model.Docente;
+import com.skillup.api.rest.model.Estudiante;
 import com.skillup.api.rest.model.Persona;
 import com.skillup.api.rest.model.Usuario;
-import com.skillup.api.rest.model.Estudiante;
-import com.skillup.api.rest.model.Docente;
-
-
-import com.skillup.api.rest.dtos.LoginRequest;
-import com.skillup.api.rest.dtos.RegistroRequest;
-import com.skillup.api.rest.dtos.LoginResponse;
-
+import com.skillup.api.rest.repository.DocenteRepository;
+import com.skillup.api.rest.repository.EstudianteRepository;
+import com.skillup.api.rest.repository.PersonaRepository;
+import com.skillup.api.rest.repository.UsuarioRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;

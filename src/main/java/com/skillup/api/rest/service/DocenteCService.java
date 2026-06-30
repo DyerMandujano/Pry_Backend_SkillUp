@@ -1,13 +1,15 @@
 package com.skillup.api.rest.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.skillup.api.rest.model.DocenteC;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DocenteCService {

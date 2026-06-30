@@ -1,19 +1,18 @@
 // 1. Paquete de tu API
 package com.skillup.api.rest.model;
 
+// 3. Importa java.util.Date
+import java.util.Date;
+
+import jakarta.persistence.Column;
 // 2. Importaciones de Jakarta Persistence
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-
-// 3. Importa java.util.Date
-import java.util.Date;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

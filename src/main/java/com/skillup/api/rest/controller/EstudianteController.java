@@ -1,9 +1,7 @@
 package com.skillup.api.rest.controller;
 
-// ... (tus importaciones @Autowired, ResponseEntity, @CrossOrigin, etc.)
-import com.skillup.api.rest.model.Estudiante;
-import com.skillup.api.rest.service.EstudianteService;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping; // ¡Asegúrate de im
 import org.springframework.web.bind.annotation.PathVariable; // ¡Importante!
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+// ... (tus importaciones @Autowired, ResponseEntity, @CrossOrigin, etc.)
+import com.skillup.api.rest.model.Estudiante;
+import com.skillup.api.rest.service.EstudianteService;
 //ACA ESTA PARA ENCONTRAR A UN ESTUDIANTE
 @RestController
 @RequestMapping("/api/estudiantes")

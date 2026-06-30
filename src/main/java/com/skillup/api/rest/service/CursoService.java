@@ -1,15 +1,17 @@
 package com.skillup.api.rest.service;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.skillup.api.rest.model.Curso;
 import com.skillup.api.rest.model.CursoMatricula;
 import com.skillup.api.rest.model.CursoNoMatricula;
 import com.skillup.api.rest.repository.CursoRepository;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CursoService {

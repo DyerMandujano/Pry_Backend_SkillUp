@@ -1,16 +1,16 @@
 package com.skillup.api.rest.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.skillup.api.rest.model.Estudiante;
 import com.skillup.api.rest.model.OpcionPregunta;
 import com.skillup.api.rest.model.RespuestaEstudiante;
 import com.skillup.api.rest.repository.EstudianteRepository;
 import com.skillup.api.rest.repository.OpcionPreguntaRepository;
 import com.skillup.api.rest.repository.RespuestaEstudianteRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Date;
 
 @Service
 public class RespuestaEstudianteService {

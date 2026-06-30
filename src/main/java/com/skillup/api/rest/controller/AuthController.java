@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skillup.api.rest.dtos.LoginRequest;
 import com.skillup.api.rest.dtos.LoginResponse;
 import com.skillup.api.rest.dtos.RegistroRequest;
-
 // 3. Importaciones de tu Servicio
 import com.skillup.api.rest.service.AuthService;
 

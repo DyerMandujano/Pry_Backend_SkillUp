@@ -3,13 +3,13 @@ package com.skillup.api.rest.model;
 
 // 2. Importa las anotaciones de Jakarta Persistence (para Spring Boot 3)
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-
 import lombok.Data;
 import lombok.NoArgsConstructor; // Para el constructor vacío
 

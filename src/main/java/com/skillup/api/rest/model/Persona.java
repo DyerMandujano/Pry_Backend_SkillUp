@@ -1,21 +1,21 @@
 // 1. Paquete de tu API
 package com.skillup.api.rest.model;
 
+// 3. Importa java.util.Date
+import java.util.Date;
+
 // 2. Importaciones de Jakarta Persistence
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-
-// 3. Importa java.util.Date
-import java.util.Date;
-
 // 4. (Recomendado) Importaciones de Lombok
 import lombok.Data;
 import lombok.NoArgsConstructor;

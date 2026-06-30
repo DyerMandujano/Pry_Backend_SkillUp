@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skillup.api.rest.model.Curso;
 import com.skillup.api.rest.model.Seccion;
 import com.skillup.api.rest.repository.SeccionRepository;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
