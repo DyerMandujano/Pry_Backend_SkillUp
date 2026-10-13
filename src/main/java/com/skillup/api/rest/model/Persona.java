@@ -5,6 +5,7 @@ package com.skillup.api.rest.model;
 import java.util.Date;
 
 // 2. Importaciones de Jakarta Persistence
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -52,5 +53,8 @@ public class Persona {
     @Column(name = "Estado")
     private int estado;
 
-    
+    @Column(name = "Dni", length = 8, nullable = false)
+    @JsonProperty("dni")
+    @JsonAlias({"Dni", "DNI"})
+    private String dni;
 }

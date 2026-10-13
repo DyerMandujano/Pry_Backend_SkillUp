@@ -110,7 +110,10 @@ public class AuthService {
     @Transactional
     public void registrarUsuario(RegistroRequest request) {
         
-    
+        if (request.getUsuario() == null || request.getUsuario().getUsername() == null) {
+            throw new RuntimeException("Los datos de usuario son obligatorios");
+        }
+
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(u) FROM Usuario u WHERE u.username = :username", 
             Long.class
@@ -120,25 +123,50 @@ public class AuthService {
         if (query.getSingleResult() > 0) {
             throw new RuntimeException("El nombre de usuario ya existe");
         }
+
+        Persona persona = request.getPersona();
+        if (persona == null) {
+            throw new RuntimeException("Los datos de la persona son obligatorios");
+        }
+
+        // Si el DNI fue enviado en la raíz del request y no en persona
+        if ((persona.getDni() == null || persona.getDni().trim().isEmpty()) && request.getDni() != null) {
+            persona.setDni(request.getDni());
+        }
+
+        if (persona.getDni() == null || persona.getDni().trim().isEmpty()) {
+            throw new RuntimeException("El DNI es obligatorio");
+        }
+
+        persona.setDni(persona.getDni().trim());
+
+        if (persona.getDni().length() > 8) {
+            throw new RuntimeException("El DNI no puede tener más de 8 caracteres");
+        }
+
+        TypedQuery<Long> queryDni = entityManager.createQuery(
+            "SELECT COUNT(p) FROM Persona p WHERE p.dni = :dni", 
+            Long.class
+        );
+        queryDni.setParameter("dni", persona.getDni());
+        if (queryDni.getSingleResult() > 0) {
+            throw new RuntimeException("El DNI ya se encuentra registrado");
+        }
         
         try {
-            Persona persona = request.getPersona();
             Usuario usuario = request.getUsuario();
 
-            
+            // 1. Guardar la Persona (incluyendo el nuevo campo DNI)
             entityManager.persist(persona);
-  
-            
+   
             int idPersonaGenerado = persona.getIdPersona();
 
-            // 3. Preparar y guardar el Usuario
+            // 2. Preparar y guardar el Usuario
             usuario.setIdPersona(idPersonaGenerado);
-            
             usuario.setFecRegistro(new java.util.Date());
-            
             entityManager.persist(usuario);
             
-            // 4. Insertar en el Rol Específico
+            // 3. Insertar en el Rol Específico
             if (request.getDocente() != null) {
                 Docente docente = request.getDocente();
                 docente.setIdPersona(idPersonaGenerado);
@@ -150,10 +178,9 @@ public class AuthService {
                 entityManager.persist(estudiante);
             }
             
-           
-            
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-
             throw new RuntimeException("Error al registrar el usuario: " + e.getMessage());
         }
     }
