@@ -170,7 +170,7 @@ public class AuthService {
             throw new RuntimeException("El apellido solo debe contener letras");
         }
 
-        // Validación de Fecha de Nacimiento (mayor de 18 años)
+        // Validación de Fecha de Nacimiento (a partir de 12 años para secundaria)
         if (persona.getFechaDeNacimiento() == null) {
             throw new RuntimeException("La fecha de nacimiento es obligatoria");
         }
@@ -178,8 +178,8 @@ public class AuthService {
         LocalDate nacimiento = persona.getFechaDeNacimiento().toInstant()
             .atZone(ZoneId.systemDefault())
             .toLocalDate();
-        if (Period.between(nacimiento, hoy).getYears() < 18) {
-            throw new RuntimeException("Debes ser mayor de 18 años para registrarte");
+        if (Period.between(nacimiento, hoy).getYears() < 12) {
+            throw new RuntimeException("Debes tener al menos 12 años para registrarte");
         }
 
         // Si el DNI fue enviado en la raíz del request y no en persona
