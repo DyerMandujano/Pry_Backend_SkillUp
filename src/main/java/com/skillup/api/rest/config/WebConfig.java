@@ -19,12 +19,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations(uploadPath);
     }
 
-    // 🔹 NUEVO: Habilitar permisos CORS específicos para la carpeta de recursos estáticos
+    // 🔹 Habilitar permisos CORS para toda la API y recursos estáticos
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/uploads/**")
-                .allowedOrigins("http://localhost:4200") // Permite que tu app de Angular acceda al contenido
-                .allowedMethods("GET", "OPTIONS")
-                .allowedHeaders("*");
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }
