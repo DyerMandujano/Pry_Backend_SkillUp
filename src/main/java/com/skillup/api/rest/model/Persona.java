@@ -40,6 +40,10 @@ public class Persona {
     @Column(name = "Apellidos")
     private String apellidos;
     
+    @Column(name = "Dni")
+    @JsonProperty("dni")
+    private String dni;
+    
     @Column(name = "Fecha_de_nacimiento")
     @Temporal(TemporalType.DATE) 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // 1. Formato: Esperar YYYY-MM-DD

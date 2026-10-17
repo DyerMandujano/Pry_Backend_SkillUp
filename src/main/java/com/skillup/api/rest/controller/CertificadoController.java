@@ -22,7 +22,7 @@ import com.skillup.api.rest.service.CertificadoService;
 
 @RestController
 @RequestMapping("/api/certificados")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class CertificadoController {
 
     

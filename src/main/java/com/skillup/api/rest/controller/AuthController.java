@@ -24,7 +24,7 @@ import com.skillup.api.rest.service.AuthService;
  */
 @RestController // (Spring) Marca esta clase como un Controlador REST (devuelve JSON)
 @RequestMapping("/api/auth") // (Spring) URL base para todos los métodos: http://localhost:8080/api/auth
-@CrossOrigin(origins = "http://localhost:4200") // (Spring) ¡IMPORTANTE! Permite llamadas desde Angular
+@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"}) // (Spring) ¡IMPORTANTE! Permite llamadas desde Angular
 public class AuthController {
 
     // 4. Inyecta el servicio (la cocina)
@@ -71,6 +71,27 @@ public class AuthController {
         } catch (RuntimeException e) {
 
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint exclusivo para que un ADMIN pueda crear otro usuario ADMIN.
+     * Escucha en: POST http://localhost:8080/api/auth/registrar-admin
+     */
+    @PostMapping("/registrar-admin")
+    public ResponseEntity<?> registrarAdmin(
+            @RequestBody RegistroRequest request,
+            @org.springframework.web.bind.annotation.RequestHeader(value = "X-User-Role", required = false) String rolHeader,
+            @org.springframework.web.bind.annotation.RequestParam(value = "rolEjecutor", required = false) String rolParam) {
+        
+        try {
+            // El rol ejecutor se puede enviar por Header HTTP o por query param
+            String rolEjecutor = (rolHeader != null && !rolHeader.trim().isEmpty()) ? rolHeader : rolParam;
+            
+            authService.registrarAdmin(request, rolEjecutor);
+            return ResponseEntity.ok().body("Administrador registrado exitosamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
 }

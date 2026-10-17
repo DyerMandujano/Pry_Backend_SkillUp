@@ -109,51 +109,104 @@ public class AuthService {
 
     @Transactional
     public void registrarUsuario(RegistroRequest request) {
-        
-    
+        validarDatosRegistro(request);
+
+        String rol = request.getUsuario().getRol();
+        if (rol == null || (!rol.equalsIgnoreCase("estudiante") && !rol.equalsIgnoreCase("docente"))) {
+            throw new RuntimeException("El registro público solo permite roles 'estudiante' o 'docente'. No está autorizado a registrar cuentas de administrador.");
+        }
+
+        guardarUsuarioYPersona(request);
+    }
+
+    @Transactional
+    public void registrarAdmin(RegistroRequest request, String rolEjecutor) {
+        if (rolEjecutor == null || !rolEjecutor.equalsIgnoreCase("admin")) {
+            throw new RuntimeException("Acceso denegado: solo un usuario con rol ADMIN puede crear otro usuario ADMIN.");
+        }
+
+        validarDatosRegistro(request);
+        request.getUsuario().setRol("admin");
+
+        guardarUsuarioYPersona(request);
+    }
+
+    private void validarDatosRegistro(RegistroRequest request) {
+        if (request.getPersona() == null || request.getUsuario() == null) {
+            throw new RuntimeException("Los datos de persona y usuario son obligatorios");
+        }
+
+        Persona persona = request.getPersona();
+        Usuario usuario = request.getUsuario();
+
+        if (persona.getNombres() == null || persona.getNombres().trim().isEmpty()) {
+            throw new RuntimeException("Los nombres son obligatorios");
+        }
+        if (persona.getApellidos() == null || persona.getApellidos().trim().isEmpty()) {
+            throw new RuntimeException("Los apellidos son obligatorios");
+        }
+
+        // Validación de DNI: obligatorio y exactamente 8 dígitos numéricos
+        if (persona.getDni() == null || !persona.getDni().trim().matches("^\\d{8}$")) {
+            throw new RuntimeException("El DNI es obligatorio y debe contener exactamente 8 dígitos numéricos");
+        }
+
+        if (usuario.getUsername() == null || usuario.getUsername().trim().isEmpty()) {
+            throw new RuntimeException("El nombre de usuario es obligatorio");
+        }
+
+        // Validación de Contraseña: obligatorio y máximo 6 caracteres/dígitos
+        if (usuario.getContrasenia() == null || usuario.getContrasenia().trim().isEmpty()) {
+            throw new RuntimeException("La contraseña es obligatoria");
+        }
+        if (usuario.getContrasenia().length() > 6) {
+            throw new RuntimeException("La contraseña debe tener como máximo 6 dígitos o caracteres");
+        }
+
         TypedQuery<Long> query = entityManager.createQuery(
             "SELECT COUNT(u) FROM Usuario u WHERE u.username = :username", 
             Long.class
         );
-        query.setParameter("username", request.getUsuario().getUsername());
+        query.setParameter("username", usuario.getUsername().trim());
         
         if (query.getSingleResult() > 0) {
             throw new RuntimeException("El nombre de usuario ya existe");
         }
-        
+    }
+
+    private void guardarUsuarioYPersona(RegistroRequest request) {
         try {
             Persona persona = request.getPersona();
             Usuario usuario = request.getUsuario();
 
-            
+            if (persona.getDni() != null) {
+                persona.setDni(persona.getDni().trim());
+            }
+            persona.setNombres(persona.getNombres().trim());
+            persona.setApellidos(persona.getApellidos().trim());
+            persona.setEstado(1); // Activo por defecto
+
             entityManager.persist(persona);
-  
-            
             int idPersonaGenerado = persona.getIdPersona();
 
-            // 3. Preparar y guardar el Usuario
             usuario.setIdPersona(idPersonaGenerado);
-            
+            usuario.setUsername(usuario.getUsername().trim());
             usuario.setFecRegistro(new java.util.Date());
-            
+
             entityManager.persist(usuario);
-            
-            // 4. Insertar en el Rol Específico
-            if (request.getDocente() != null) {
+
+            if (usuario.getRol().equalsIgnoreCase("docente") && request.getDocente() != null) {
                 Docente docente = request.getDocente();
                 docente.setIdPersona(idPersonaGenerado);
+                docente.setEstado(1);
                 entityManager.persist(docente);
-                
-            } else if (request.getEstudiante() != null) {
+            } else if (usuario.getRol().equalsIgnoreCase("estudiante") && request.getEstudiante() != null) {
                 Estudiante estudiante = request.getEstudiante();
                 estudiante.setIdPersona(idPersonaGenerado);
+                estudiante.setEstado(1);
                 entityManager.persist(estudiante);
             }
-            
-           
-            
         } catch (Exception e) {
-
             throw new RuntimeException("Error al registrar el usuario: " + e.getMessage());
         }
     }

@@ -28,7 +28,7 @@ import com.skillup.api.rest.service.LeccionService;
 
 @RestController
 @RequestMapping("/api/lecciones")
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"}) 
 public class LeccionController {
 
     @Autowired

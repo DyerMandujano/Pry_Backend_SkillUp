@@ -16,7 +16,7 @@ import com.skillup.api.rest.service.EstudianteService;
 //ACA ESTA PARA ENCONTRAR A UN ESTUDIANTE
 @RestController
 @RequestMapping("/api/estudiantes")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class EstudianteController {
 
     @Autowired

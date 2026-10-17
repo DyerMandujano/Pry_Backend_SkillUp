@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/uploads/**")
-                .allowedOrigins("http://localhost:4200") // Permite que tu app de Angular acceda al contenido
+                .allowedOrigins("http://192.168.56.1:4200", "http://localhost:4200")
                 .allowedMethods("GET", "OPTIONS")
                 .allowedHeaders("*");
     }
