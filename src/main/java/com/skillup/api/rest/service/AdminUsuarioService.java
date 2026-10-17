@@ -32,7 +32,7 @@ public class AdminUsuarioService {
     private EntityManager entityManager;
 
     public List<UsuarioAdminDTO> listarUsuarios(String rolFiltro, String buscar) {
-        StringBuilder jpql = new StringBuilder("SELECT u FROM Usuario u WHERE 1=1 ");
+        StringBuilder jpql = new StringBuilder("SELECT u FROM Usuario u WHERE LOWER(u.rol) != 'admin' ");
 
         if (rolFiltro != null && !rolFiltro.trim().isEmpty() && !rolFiltro.equalsIgnoreCase("todos")) {
             jpql.append("AND LOWER(u.rol) = LOWER(:rol) ");
@@ -95,6 +95,10 @@ public class AdminUsuarioService {
     public UsuarioAdminDTO cambiarEstadoUsuario(int idUsuario, int nuevoEstado) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
             .orElseThrow(() -> new RuntimeException("No se encontró el usuario con ID: " + idUsuario));
+
+        if ("admin".equalsIgnoreCase(usuario.getRol())) {
+            throw new RuntimeException("La cuenta de administrador principal no puede ser desactivada.");
+        }
 
         Persona persona = entityManager.find(Persona.class, usuario.getIdPersona());
         if (persona != null) {

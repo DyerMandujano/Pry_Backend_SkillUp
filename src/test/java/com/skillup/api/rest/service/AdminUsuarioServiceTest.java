@@ -94,4 +94,17 @@ public class AdminUsuarioServiceTest {
             adminUsuarioService.cambiarEstadoUsuario(999, 0);
         });
     }
+
+    @Test
+    @DisplayName("Seguridad: Cuenta de administrador principal no puede ser desactivada")
+    void testAdminNoPuedeSerDesactivado() {
+        usuarioPrueba.setRol("admin");
+        when(usuarioRepository.findById(200)).thenReturn(Optional.of(usuarioPrueba));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            adminUsuarioService.cambiarEstadoUsuario(200, 0);
+        });
+
+        org.junit.jupiter.api.Assertions.assertTrue(ex.getMessage().contains("no puede ser desactivada"));
+    }
 }

@@ -14,8 +14,11 @@ import com.skillup.api.rest.service.MatriculaService;
 @CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class MatriculaController {
 
-	 @Autowired
+	    @Autowired
 	    private MatriculaService matriculaService;
+
+	    @Autowired
+	    private com.skillup.api.rest.repository.MatriculaRepository matriculaRepository;
 
 	    // 🔹 Insertar matrícula
 	    @PostMapping("/insertar")
@@ -25,5 +28,13 @@ public class MatriculaController {
 
 	        matriculaService.insertarMatricula(idEstudiante, idCurso);
 	        return "Matrícula registrada correctamente";
+	    }
+
+	    // 🔹 Verificar si el estudiante está matriculado
+	    @org.springframework.web.bind.annotation.GetMapping("/verificar")
+	    public boolean verificarMatricula(
+	            @RequestParam int idEstudiante,
+	            @RequestParam int idCurso) {
+	        return matriculaRepository.existsByIdEstudianteAndIdCurso(idEstudiante, idCurso);
 	    }
 }

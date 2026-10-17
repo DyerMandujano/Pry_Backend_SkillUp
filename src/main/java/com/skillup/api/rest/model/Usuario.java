@@ -1,11 +1,8 @@
-// 1. Paquete de tu API
 package com.skillup.api.rest.model;
 
-// 3. Importa java.util.Date
 import java.util.Date;
 
 import jakarta.persistence.Column;
-// 2. Importaciones de Jakarta Persistence
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,24 +13,21 @@ import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Entidad que representa la tabla 'Usuario' de la base de datos.
- */
 @Data 
 @NoArgsConstructor 
 @Entity 
 @Table(name = "Usuario") 
 public class Usuario {
 
-    @Id // (JPA) Llave Primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // (JPA) ID autoincremental
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     @Column(name = "Id_Usuario")
     private int idUsuario;
     
     @Column(name = "Id_Persona")
     private int idPersona;
     
-    @Column(name = "Username")
+    @Column(name = "Usuario")
     private String username;
     
     @Column(name = "Contrasenia")
@@ -42,9 +36,55 @@ public class Usuario {
     @Column(name = "Rol")
     private String rol;
     
-    
     @Column(name = "Fec_Registro")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecRegistro;
 
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public int getIdPersona() {
+        return idPersona;
+    }
+
+    public void setIdPersona(int idPersona) {
+        this.idPersona = idPersona;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public Date getFecRegistro() {
+        return fecRegistro;
+    }
+
+    public void setFecRegistro(Date fecRegistro) {
+        this.fecRegistro = fecRegistro;
+    }
 }

@@ -94,4 +94,42 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
+
+    /**
+     * HU-22: Verifica si un identificador (username o DNI) existe para recuperar contraseña.
+     * Escucha en: POST http://localhost:8080/api/auth/recuperar-password/verificar
+     */
+    @PostMapping("/recuperar-password/verificar")
+    public ResponseEntity<?> verificarIdentificador(@RequestBody java.util.Map<String, String> body) {
+        try {
+            String identificador = body != null ? body.get("identificador") : null;
+            String username = authService.verificarIdentificador(identificador);
+            java.util.Map<String, Object> resp = new java.util.HashMap<>();
+            resp.put("mensaje", "Usuario verificado exitosamente");
+            resp.put("username", username);
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
+            java.util.Map<String, String> err = new java.util.HashMap<>();
+            err.put("mensaje", e.getMessage());
+            return ResponseEntity.badRequest().body(err);
+        }
+    }
+
+    /**
+     * HU-22: Restablece la contraseña del usuario.
+     * Escucha en: POST http://localhost:8080/api/auth/recuperar-password/cambiar
+     */
+    @PostMapping("/recuperar-password/cambiar")
+    public ResponseEntity<?> restablecerPassword(@RequestBody com.skillup.api.rest.dtos.RecuperarPasswordDTO dto) {
+        try {
+            authService.restablecerContrasenia(dto);
+            java.util.Map<String, String> resp = new java.util.HashMap<>();
+            resp.put("mensaje", "Contraseña actualizada exitosamente. Ahora puede iniciar sesión con su nueva clave.");
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
+            java.util.Map<String, String> err = new java.util.HashMap<>();
+            err.put("mensaje", e.getMessage());
+            return ResponseEntity.badRequest().body(err);
+        }
+    }
 }

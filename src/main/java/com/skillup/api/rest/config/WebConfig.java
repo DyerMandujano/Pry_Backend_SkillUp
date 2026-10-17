@@ -1,10 +1,11 @@
 package com.skillup.api.rest.config; 
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry; // 🔹 NUEVA IMPORTACIÓN
+import java.nio.file.Paths;
+
+import org.springframework.context.annotation.Configuration; // 🔹 NUEVA IMPORTACIÓN
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import java.nio.file.Paths;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
