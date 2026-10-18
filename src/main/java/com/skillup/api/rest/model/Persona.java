@@ -1,11 +1,7 @@
-// 1. Paquete de tu API
 package com.skillup.api.rest.model;
 
-// 3. Importa java.util.Date
 import java.util.Date;
 
-// 2. Importaciones de Jakarta Persistence
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,20 +13,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-// 4. (Recomendado) Importaciones de Lombok
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Entidad que representa la tabla 'Persona' de la base de datos.
- */
 @Data 
 @NoArgsConstructor 
 @Entity 
 @Table(name = "Persona") 
 public class Persona {
 
-    @Id // (JPA) Llave Primaria
+    @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     @Column(name = "Id_Persona")
     private int idPersona;
@@ -41,11 +33,15 @@ public class Persona {
     @Column(name = "Apellidos")
     private String apellidos;
     
+    @Column(name = "Dni")
+    @JsonProperty("dni")
+    private String dni;
+    
     @Column(name = "Fecha_de_nacimiento")
     @Temporal(TemporalType.DATE) 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") // 1. Formato: Esperar YYYY-MM-DD
-    @JsonProperty("fecha_nacimiento") // 2. Mapeo: Mapear del JSON 'fecha_nacimiento' a este campo
-    private Date fechaDeNacimiento; // Campo en Java: fechaDeNacimiento
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonProperty("fecha_nacimiento")
+    private Date fechaDeNacimiento;
     
     @Column(name = "Genero")
     private String genero;
@@ -53,8 +49,59 @@ public class Persona {
     @Column(name = "Estado")
     private int estado;
 
-    @Column(name = "Dni", length = 8, nullable = false)
-    @JsonProperty("dni")
-    @JsonAlias({"Dni", "DNI"})
-    private String dni;
+    public int getIdPersona() {
+        return idPersona;
+    }
+
+    public void setIdPersona(int idPersona) {
+        this.idPersona = idPersona;
+    }
+
+    public String getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public Date getFechaDeNacimiento() {
+        return fechaDeNacimiento;
+    }
+
+    public void setFechaDeNacimiento(Date fechaDeNacimiento) {
+        this.fechaDeNacimiento = fechaDeNacimiento;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
 }

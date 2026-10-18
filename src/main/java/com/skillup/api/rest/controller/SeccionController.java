@@ -18,7 +18,7 @@ import com.skillup.api.rest.service.SeccionService;
 
 @RestController
 @RequestMapping("/api/secciones")
-@CrossOrigin(origins = "http://localhost:4200") // para Angular
+@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"}) // para Angular
 public class SeccionController {
 
 	@Autowired

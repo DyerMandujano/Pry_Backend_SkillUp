@@ -1,16 +1,31 @@
 package com.skillup.api.rest.dtos;
 
-import lombok.Data;
-
-@Data // (Lombok) Crea getters y setters
 public class LoginRequest {
-    
-    // Debe coincidir con el JSON que envía Angular
-    // {
-    //   "username": "usuario@mail.com",
-    //   "contrasenia": "123456"
-    // }
     
     private String username;
     private String contrasenia;
+
+    public LoginRequest() {
+    }
+
+    public LoginRequest(String username, String contrasenia) {
+        this.username = username;
+        this.contrasenia = contrasenia;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
 }

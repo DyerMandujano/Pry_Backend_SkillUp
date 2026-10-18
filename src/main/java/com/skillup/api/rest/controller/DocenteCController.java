@@ -14,7 +14,7 @@ import com.skillup.api.rest.service.DocenteCService;
 
 @RestController
 @RequestMapping("/api/docentess")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class DocenteCController {
 
 	

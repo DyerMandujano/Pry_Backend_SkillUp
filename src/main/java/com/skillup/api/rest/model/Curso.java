@@ -13,11 +13,29 @@ import lombok.NoArgsConstructor;
 
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "Curso")
 public class Curso {
+
+	public Curso() {
+	}
+
+	public Curso(Integer idCurso, Integer idDocente, Integer idCategoria, String nombreCurso,
+				 String descripcion, String resumen, String nivel, Integer duracionMin,
+				 LocalDate fechaPublicacion, String imagenCurso1, String imagenCurso2, Integer estado) {
+		this.idCurso = idCurso;
+		this.idDocente = idDocente;
+		this.idCategoria = idCategoria;
+		this.nombreCurso = nombreCurso;
+		this.descripcion = descripcion;
+		this.resumen = resumen;
+		this.nivel = nivel;
+		this.duracionMin = duracionMin;
+		this.fechaPublicacion = fechaPublicacion;
+		this.imagenCurso1 = imagenCurso1;
+		this.imagenCurso2 = imagenCurso2;
+		this.estado = estado;
+	}
 	
 
 	@Id
