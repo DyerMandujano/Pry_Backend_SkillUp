@@ -40,6 +40,13 @@ public class Usuario {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecRegistro;
 
+    @Column(name = "Intentos_Fallidos")
+    private int intentosFallidos;
+
+    @Column(name = "Fec_Bloqueo_Hasta")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecBloqueoHasta;
+
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -86,5 +93,21 @@ public class Usuario {
 
     public void setFecRegistro(Date fecRegistro) {
         this.fecRegistro = fecRegistro;
+    }
+
+    public int getIntentosFallidos() {
+        return intentosFallidos;
+    }
+
+    public void setIntentosFallidos(int intentosFallidos) {
+        this.intentosFallidos = intentosFallidos;
+    }
+
+    public Date getFecBloqueoHasta() {
+        return fecBloqueoHasta;
+    }
+
+    public void setFecBloqueoHasta(Date fecBloqueoHasta) {
+        this.fecBloqueoHasta = fecBloqueoHasta;
     }
 }

@@ -136,6 +136,7 @@ public class AuthService {
             sp.registerStoredProcedureParameter("nivel_educativo", String.class, ParameterMode.IN);
             sp.registerStoredProcedureParameter("especialidad", String.class, ParameterMode.IN);
             sp.registerStoredProcedureParameter("grado_academico", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("celular", String.class, ParameterMode.IN);
             sp.registerStoredProcedureParameter("id_usuario", Integer.class, ParameterMode.OUT);
             sp.registerStoredProcedureParameter("usuario_creado", String.class, ParameterMode.OUT);
             sp.registerStoredProcedureParameter("resultado", Integer.class, ParameterMode.OUT);
@@ -151,6 +152,8 @@ public class AuthService {
             sp.setParameter("nivel_educativo", nivelEducativo);
             sp.setParameter("especialidad", especialidad);
             sp.setParameter("grado_academico", gradoAcademico);
+            sp.setParameter("celular", (persona.getCelular() != null && !persona.getCelular().trim().isEmpty()) 
+                    ? persona.getCelular().trim() : null);
 
             sp.execute();
 
@@ -211,6 +214,73 @@ public class AuthService {
     }
 
     /**
+     * HU-22: Obtiene los datos del usuario verificado, incluyendo si tiene celular asociado y enmascarado
+     */
+    public java.util.Map<String, Object> verificarIdentificadorDetallado(String identificador) {
+        if (identificador == null || identificador.trim().isEmpty()) {
+            throw new RuntimeException("Ingrese un nombre de usuario o DNI válido.");
+        }
+
+        String idLimpio = identificador.trim();
+        Persona persona = null;
+        Usuario usuario = null;
+
+        // 1. Buscar por username
+        TypedQuery<Usuario> queryUser = entityManager.createQuery(
+            "SELECT u FROM Usuario u WHERE LOWER(u.username) = LOWER(:username)", Usuario.class
+        );
+        queryUser.setParameter("username", idLimpio);
+        List<Usuario> usuarios = queryUser.getResultList();
+
+        if (!usuarios.isEmpty()) {
+            usuario = usuarios.get(0);
+            persona = entityManager.find(Persona.class, usuario.getIdPersona());
+        } else {
+            // 2. Buscar por DNI en Persona
+            TypedQuery<Persona> queryPersona = entityManager.createQuery(
+                "SELECT p FROM Persona p WHERE p.dni = :dni", Persona.class
+            );
+            queryPersona.setParameter("dni", idLimpio);
+            List<Persona> personas = queryPersona.getResultList();
+
+            if (!personas.isEmpty()) {
+                persona = personas.get(0);
+                TypedQuery<Usuario> queryUserByPersona = entityManager.createQuery(
+                    "SELECT u FROM Usuario u WHERE u.idPersona = :idPersona", Usuario.class
+                );
+                queryUserByPersona.setParameter("idPersona", persona.getIdPersona());
+                List<Usuario> userList = queryUserByPersona.getResultList();
+                if (!userList.isEmpty()) {
+                    usuario = userList.get(0);
+                }
+            }
+        }
+
+        if (usuario == null) {
+            throw new RuntimeException("No se encontró ninguna cuenta asociada al usuario o DNI ingresado.");
+        }
+
+        java.util.Map<String, Object> resp = new java.util.HashMap<>();
+        resp.put("username", usuario.getUsername());
+        resp.put("idPersona", persona != null ? persona.getIdPersona() : null);
+
+        String cel = (persona != null) ? persona.getCelular() : null;
+        if (cel != null && cel.trim().length() == 9) {
+            String limpio = cel.trim();
+            String enmascarado = limpio.substring(0, 3) + "***" + limpio.substring(6);
+            resp.put("tieneCelular", true);
+            resp.put("celularEnmascarado", enmascarado);
+            resp.put("celular", limpio);
+        } else {
+            resp.put("tieneCelular", false);
+            resp.put("celularEnmascarado", null);
+            resp.put("celular", null);
+        }
+
+        return resp;
+    }
+
+    /**
      * HU-22: Restablece la contraseña delegando el hasheado nativo y la actualización a SP_ActualizarPassword
      */
     @Transactional
@@ -223,35 +293,128 @@ public class AuthService {
             throw new RuntimeException("La nueva contraseña no puede estar vacía.");
         }
 
-        if (dto.getNuevaContrasenia().length() < 6) {
-            throw new RuntimeException("La contraseña debe tener como mínimo 6 dígitos o caracteres.");
-        }
-
         if (!dto.getNuevaContrasenia().equals(dto.getConfirmarContrasenia())) {
             throw new RuntimeException("Las contraseñas no coinciden. Verifíquelas e intente nuevamente.");
+        }
+
+        if (dto.getNuevaContrasenia().length() < 8) {
+            throw new RuntimeException("La contraseña debe tener como mínimo 8 caracteres.");
         }
 
         try {
             StoredProcedureQuery sp = entityManager.createStoredProcedureQuery("dbo.SP_ActualizarPassword");
             sp.registerStoredProcedureParameter("identificador", String.class, ParameterMode.IN);
             sp.registerStoredProcedureParameter("nueva_contrasenia", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("codigo_sms", String.class, ParameterMode.IN);
             sp.registerStoredProcedureParameter("resultado", Integer.class, ParameterMode.OUT);
             sp.registerStoredProcedureParameter("mensaje", String.class, ParameterMode.OUT);
 
             sp.setParameter("identificador", dto.getIdentificador() != null ? dto.getIdentificador().trim() : "");
             sp.setParameter("nueva_contrasenia", dto.getNuevaContrasenia());
+            sp.setParameter("codigo_sms", (dto.getCodigoSms() != null && !dto.getCodigoSms().trim().isEmpty())
+                    ? dto.getCodigoSms().trim() : null);
             sp.execute();
 
             Integer resultado = (Integer) sp.getOutputParameterValue("resultado");
             String mensaje = (String) sp.getOutputParameterValue("mensaje");
 
             if (resultado == null || resultado != 0) {
-                throw new RuntimeException(mensaje != null ? mensaje : "Error al actualizar la contraseña.");
+                throw new RuntimeException(mapearMensajeErrorBD(mensaje));
             }
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar la contraseña: " + e.getMessage());
+            throw new RuntimeException(mapearMensajeErrorBD(e.getMessage()));
+        }
+    }
+
+    /**
+     * Genera un código OTP de 6 dígitos para validación SMS (válido por 5 minutos)
+     */
+    @Transactional
+    public java.util.Map<String, Object> generarCodigoSms(String celular, String tipoOperacion, Integer idPersona) {
+        if (celular == null || celular.trim().length() != 9 || !celular.trim().startsWith("9")) {
+            throw new RuntimeException("El número de celular debe tener exactamente 9 dígitos y comenzar con 9 (Perú).");
+        }
+
+        try {
+            StoredProcedureQuery sp = entityManager.createStoredProcedureQuery("dbo.SP_GenerarCodigoSMS");
+            sp.registerStoredProcedureParameter("celular", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("tipo_operacion", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("id_persona", Integer.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("codigo_generado", String.class, ParameterMode.OUT);
+            sp.registerStoredProcedureParameter("resultado", Integer.class, ParameterMode.OUT);
+            sp.registerStoredProcedureParameter("mensaje", String.class, ParameterMode.OUT);
+
+            sp.setParameter("celular", celular.trim());
+            sp.setParameter("tipo_operacion", tipoOperacion != null ? tipoOperacion.trim().toUpperCase() : "REGISTRO");
+            sp.setParameter("id_persona", idPersona);
+
+            sp.execute();
+
+            Integer resultado = (Integer) sp.getOutputParameterValue("resultado");
+            String mensaje = (String) sp.getOutputParameterValue("mensaje");
+            String codigoGenerado = (String) sp.getOutputParameterValue("codigo_generado");
+
+            if (resultado == null || resultado != 0) {
+                throw new RuntimeException(mensaje != null ? mensaje : "Error al generar código SMS.");
+            }
+
+            java.util.Map<String, Object> resp = new java.util.HashMap<>();
+            resp.put("resultado", resultado);
+            resp.put("mensaje", mensaje);
+            resp.put("codigoSmsSimulado", codigoGenerado); // Simulado en respuesta para desarrollo / pasarela
+            return resp;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar código SMS: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Valida un código OTP de 6 dígitos ingresado por el usuario
+     */
+    @Transactional
+    public java.util.Map<String, Object> validarCodigoSms(String celular, String codigoIngresado, String tipoOperacion) {
+        if (celular == null || celular.trim().length() != 9) {
+            throw new RuntimeException("El número de celular debe tener exactamente 9 dígitos.");
+        }
+        if (codigoIngresado == null || codigoIngresado.trim().length() != 6) {
+            throw new RuntimeException("El código de verificación debe tener 6 dígitos.");
+        }
+
+        try {
+            StoredProcedureQuery sp = entityManager.createStoredProcedureQuery("dbo.SP_ValidarCodigoSMS");
+            sp.registerStoredProcedureParameter("celular", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("codigo_ingresado", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("tipo_operacion", String.class, ParameterMode.IN);
+            sp.registerStoredProcedureParameter("es_valido", Boolean.class, ParameterMode.OUT);
+            sp.registerStoredProcedureParameter("resultado", Integer.class, ParameterMode.OUT);
+            sp.registerStoredProcedureParameter("mensaje", String.class, ParameterMode.OUT);
+
+            sp.setParameter("celular", celular.trim());
+            sp.setParameter("codigo_ingresado", codigoIngresado.trim());
+            sp.setParameter("tipo_operacion", tipoOperacion != null ? tipoOperacion.trim().toUpperCase() : "REGISTRO");
+
+            sp.execute();
+
+            Boolean esValido = (Boolean) sp.getOutputParameterValue("es_valido");
+            Integer resultado = (Integer) sp.getOutputParameterValue("resultado");
+            String mensaje = (String) sp.getOutputParameterValue("mensaje");
+
+            if (esValido == null || !esValido) {
+                throw new RuntimeException(mensaje != null ? mensaje : "Código SMS inválido o expirado.");
+            }
+
+            java.util.Map<String, Object> resp = new java.util.HashMap<>();
+            resp.put("esValido", true);
+            resp.put("mensaje", mensaje);
+            return resp;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al validar código SMS: " + e.getMessage());
         }
     }
 
@@ -272,11 +435,26 @@ public class AuthService {
         if (error.contains("CK_Persona_Dni")) {
             return "El DNI es obligatorio y debe contener exactamente 8 dígitos numéricos.";
         }
+        if (error.contains("CK_Persona_CelularPeru") || error.contains("50007") || error.contains("50020")) {
+            return "El número de celular debe contener exactamente 9 dígitos numéricos y comenzar con 9 (Perú).";
+        }
         if (error.contains("CK_Persona_NoVacio")) {
             return "Los nombres, apellidos y DNI son obligatorios y no pueden estar vacíos.";
         }
-        if (error.contains("CK_Usuario_ContraseniaNoVacia") || error.contains("mínimo 6")) {
-            return "La contraseña debe tener como mínimo 6 dígitos o caracteres.";
+        if (error.contains("CK_Usuario_ContraseniaNoVacia") || error.contains("mínimo 8") || error.contains("50001") || error.contains("50010")) {
+            return "La contraseña debe tener como mínimo 8 caracteres.";
+        }
+        if (error.contains("50002") || error.contains("50011")) {
+            return "La contraseña debe incluir al menos una letra mayúscula (A-Z).";
+        }
+        if (error.contains("50003") || error.contains("50012")) {
+            return "La contraseña debe incluir al menos una letra minúscula (a-z).";
+        }
+        if (error.contains("50004") || error.contains("50013")) {
+            return "La contraseña debe incluir al menos un número (0-9).";
+        }
+        if (error.contains("50005") || error.contains("50014")) {
+            return "La contraseña debe incluir al menos un carácter especial o signo.";
         }
         if (error.contains("UQ_Usuario_Usuario")) {
             return "El nombre de usuario institucional ya se encuentra registrado.";

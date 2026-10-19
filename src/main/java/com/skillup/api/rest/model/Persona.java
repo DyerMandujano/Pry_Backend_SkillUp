@@ -49,6 +49,15 @@ public class Persona {
     @Column(name = "Estado")
     private int estado;
 
+    @Column(name = "Celular")
+    @JsonProperty("celular")
+    private String celular;
+
+    @Column(name = "Celular_Verificado")
+    @JsonProperty("celular_verificado")
+    private Boolean celularVerificado;
+
+
     public int getIdPersona() {
         return idPersona;
     }
@@ -103,5 +112,21 @@ public class Persona {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public Boolean getCelularVerificado() {
+        return celularVerificado;
+    }
+
+    public void setCelularVerificado(Boolean celularVerificado) {
+        this.celularVerificado = celularVerificado;
     }
 }
