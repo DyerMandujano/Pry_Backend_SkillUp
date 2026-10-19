@@ -13,11 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data 
-@NoArgsConstructor 
 @Entity 
 @Table(name = "Persona") 
 public class Persona {
@@ -57,6 +53,20 @@ public class Persona {
     @JsonProperty("celular_verificado")
     private Boolean celularVerificado;
 
+    public Persona() {
+    }
+
+    public Persona(int idPersona, String nombres, String apellidos, String dni, Date fechaDeNacimiento, String genero, int estado, String celular, Boolean celularVerificado) {
+        this.idPersona = idPersona;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.dni = dni;
+        this.fechaDeNacimiento = fechaDeNacimiento;
+        this.genero = genero;
+        this.estado = estado;
+        this.celular = celular;
+        this.celularVerificado = celularVerificado;
+    }
 
     public int getIdPersona() {
         return idPersona;

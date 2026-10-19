@@ -19,7 +19,7 @@ public class RespuestaEstudiante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id_Resp_EstudIante")
+    @Column(name = "Id_Resp_Estudiante")
     private int idRespEstudiante;
 
     @ManyToOne

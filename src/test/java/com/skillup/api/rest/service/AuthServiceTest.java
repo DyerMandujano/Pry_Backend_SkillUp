@@ -238,6 +238,23 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("CP-13b [Login Bloqueo]: Login falla si la cuenta fue inactivada temporalmente por 30 minutos")
+    void testLoginCuentaInactivaPorBloqueo() {
+        when(storedProcedureQuery.getOutputParameterValue("es_valido")).thenReturn(false);
+        when(storedProcedureQuery.getOutputParameterValue("mensaje"))
+            .thenReturn("Cuenta inactiva por seguridad durante 30 minutos debido a 3 intentos fallidos.");
+
+        LoginRequest loginReq = new LoginRequest("76543210@skillup.pe", "clave_errada");
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            authService.validarLogin(loginReq);
+        });
+
+        assertTrue(ex.getMessage().contains("Cuenta inactiva por seguridad"));
+        assertTrue(ex.getMessage().contains("30 minutos"));
+    }
+
+    @Test
     @DisplayName("CP-14 [SMS OTP]: Generación exitosa de código SMS OTP")
     void testGenerarCodigoSmsExitoso() {
         when(storedProcedureQuery.getOutputParameterValue("resultado")).thenReturn(0);

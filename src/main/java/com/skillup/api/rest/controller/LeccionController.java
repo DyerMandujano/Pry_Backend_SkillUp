@@ -102,8 +102,9 @@ public class LeccionController {
             int archivoIndex = 0;
             
             for (int i = 0; i < leccion.getMateriales().size(); i++) {
-                // Solo procesamos si hay un archivo físico adjunto desde Angular
-                if (leccion.getMateriales().get(i).getUrlMaterial() == null || leccion.getMateriales().get(i).getUrlMaterial().isEmpty()) {
+                com.skillup.api.rest.model.Material mat = leccion.getMateriales().get(i);
+                // Solo procesamos si no tiene URL o se marcó vacía para subir nuevo archivo
+                if (mat.getUrlMaterial() == null || mat.getUrlMaterial().trim().isEmpty()) {
                     if (archivoIndex < archivos.size()) {
                         MultipartFile file = archivos.get(archivoIndex);
                         try {
@@ -114,7 +115,10 @@ public class LeccionController {
                             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
                             
                             // Guardamos la ruta relativa en el objeto que irá a SQL Server
-                            leccion.getMateriales().get(i).setUrlMaterial(uploadDir + fileName);
+                            mat.setUrlMaterial(uploadDir + fileName);
+                            if (mat.getNombreArchivo() == null || mat.getNombreArchivo().trim().isEmpty()) {
+                                mat.setNombreArchivo(file.getOriginalFilename());
+                            }
                             archivoIndex++;
                         } catch (IOException e) {
                             e.printStackTrace();

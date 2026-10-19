@@ -29,4 +29,7 @@ public class Matricula {
 
     @Column(name = "Estado")
     private int estado;
+
+    @Column(name = "Intentos_Examen")
+    private Integer intentosExamen;
 }
