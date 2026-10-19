@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,6 @@ import com.skillup.api.rest.service.CertificadoService;
 
 @RestController
 @RequestMapping("/api/certificados")
-@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class CertificadoController {
 
     

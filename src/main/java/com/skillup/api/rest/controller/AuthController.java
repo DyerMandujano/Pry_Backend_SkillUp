@@ -4,7 +4,6 @@ package com.skillup.api.rest.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,6 @@ import com.skillup.api.rest.service.AuthService;
  */
 @RestController // (Spring) Marca esta clase como un Controlador REST (devuelve JSON)
 @RequestMapping("/api/auth") // (Spring) URL base para todos los métodos: http://localhost:8080/api/auth
-@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"}) // (Spring) ¡IMPORTANTE! Permite llamadas desde Angular
 public class AuthController {
 
     // 4. Inyecta el servicio (la cocina)

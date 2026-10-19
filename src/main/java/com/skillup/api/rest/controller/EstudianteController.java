@@ -4,19 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping; // ¡Asegúrate de importar GET!
 import org.springframework.web.bind.annotation.PathVariable; // ¡Importante!
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// ... (tus importaciones @Autowired, ResponseEntity, @CrossOrigin, etc.)
+// ... (tus importaciones @Autowired, ResponseEntity, etc.)
 import com.skillup.api.rest.model.Estudiante;
 import com.skillup.api.rest.service.EstudianteService;
 //ACA ESTA PARA ENCONTRAR A UN ESTUDIANTE
 @RestController
 @RequestMapping("/api/estudiantes")
-@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class EstudianteController {
 
     @Autowired

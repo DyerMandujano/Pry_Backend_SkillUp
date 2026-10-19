@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,7 +16,6 @@ import com.skillup.api.rest.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuarios") // URL base: http://localhost:8080/api/usuarios
-@CrossOrigin(origins = {"http://192.168.56.1:4200", "http://localhost:4200"})
 public class UsuarioController {
 
     @Autowired
