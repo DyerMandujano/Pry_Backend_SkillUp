@@ -75,6 +75,40 @@ public class Curso {
 
     @Column(name = "Estado")
     private Integer estado;
-    
-    
+
+    public Integer getIdCurso() { return idCurso; }
+    public void setIdCurso(Integer idCurso) { this.idCurso = idCurso; }
+
+    public Integer getIdDocente() { return idDocente; }
+    public void setIdDocente(Integer idDocente) { this.idDocente = idDocente; }
+
+    public Integer getIdCategoria() { return idCategoria; }
+    public void setIdCategoria(Integer idCategoria) { this.idCategoria = idCategoria; }
+
+    public String getNombreCurso() { return nombreCurso; }
+    public void setNombreCurso(String nombreCurso) { this.nombreCurso = nombreCurso; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public String getResumen() { return resumen; }
+    public void setResumen(String resumen) { this.resumen = resumen; }
+
+    public String getNivel() { return nivel; }
+    public void setNivel(String nivel) { this.nivel = nivel; }
+
+    public Integer getDuracionMin() { return duracionMin; }
+    public void setDuracionMin(Integer duracionMin) { this.duracionMin = duracionMin; }
+
+    public LocalDate getFechaPublicacion() { return fechaPublicacion; }
+    public void setFechaPublicacion(LocalDate fechaPublicacion) { this.fechaPublicacion = fechaPublicacion; }
+
+    public String getImagenCurso1() { return imagenCurso1; }
+    public void setImagenCurso1(String imagenCurso1) { this.imagenCurso1 = imagenCurso1; }
+
+    public String getImagenCurso2() { return imagenCurso2; }
+    public void setImagenCurso2(String imagenCurso2) { this.imagenCurso2 = imagenCurso2; }
+
+    public Integer getEstado() { return estado; }
+    public void setEstado(Integer estado) { this.estado = estado; }
 }
