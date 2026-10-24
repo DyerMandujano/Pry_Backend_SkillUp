@@ -24,7 +24,6 @@ public class Material {
     @Column(name = "Url_Material", length = 500)
     private String urlMaterial;
     
-    // (Opcional) Si en el futuro quieres guardar el nombre visible del archivo
     @Column(name = "Nombre_Archivo", length = 200)
     private String nombreArchivo;
     
@@ -32,4 +31,39 @@ public class Material {
     @ManyToOne
     @JoinColumn(name = "Id_Leccion")
     private Leccion leccion;
+
+    public Material() {
+    }
+
+    public int getIdMaterial() {
+        return idMaterial;
+    }
+
+    public void setIdMaterial(int idMaterial) {
+        this.idMaterial = idMaterial;
+    }
+
+    public String getUrlMaterial() {
+        return urlMaterial;
+    }
+
+    public void setUrlMaterial(String urlMaterial) {
+        this.urlMaterial = urlMaterial;
+    }
+
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
+
+    public void setNombreArchivo(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
+    }
+
+    public Leccion getLeccion() {
+        return leccion;
+    }
+
+    public void setLeccion(Leccion leccion) {
+        this.leccion = leccion;
+    }
 }

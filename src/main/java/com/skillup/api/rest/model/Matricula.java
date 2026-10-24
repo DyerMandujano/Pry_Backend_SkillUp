@@ -32,4 +32,55 @@ public class Matricula {
 
     @Column(name = "Intentos_Examen")
     private Integer intentosExamen;
+
+    public Matricula() {
+    }
+
+    public int getIdMatricula() {
+        return idMatricula;
+    }
+
+    public void setIdMatricula(int idMatricula) {
+        this.idMatricula = idMatricula;
+    }
+
+    public int getIdEstudiante() {
+        return idEstudiante;
+    }
+
+    public void setIdEstudiante(int idEstudiante) {
+        this.idEstudiante = idEstudiante;
+    }
+
+    public int getIdCurso() {
+        return idCurso;
+    }
+
+    public void setIdCurso(int idCurso) {
+        this.idCurso = idCurso;
+    }
+
+    public java.sql.Date getFechaMatricula() {
+        return fechaMatricula;
+    }
+
+    public void setFechaMatricula(java.sql.Date fechaMatricula) {
+        this.fechaMatricula = fechaMatricula;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public Integer getIntentosExamen() {
+        return intentosExamen;
+    }
+
+    public void setIntentosExamen(Integer intentosExamen) {
+        this.intentosExamen = intentosExamen;
+    }
 }

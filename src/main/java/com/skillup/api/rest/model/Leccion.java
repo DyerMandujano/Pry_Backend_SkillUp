@@ -41,8 +41,74 @@ public class Leccion {
     @Column(name = "url_video", length = 500)
     private String urlVideo;
 
-    // 🔹 NUEVA RELACIÓN DE UNO A MUCHOS PARA LOS MATERIALES DINÁMICOS
-    @JsonManagedReference // Evita bucles infinitos al convertir a JSON
+    @JsonManagedReference
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materiales;
+
+    public Leccion() {
+    }
+
+    public int getIdLeccion() {
+        return idLeccion;
+    }
+
+    public void setIdLeccion(int idLeccion) {
+        this.idLeccion = idLeccion;
+    }
+
+    public int getIdSeccion() {
+        return idSeccion;
+    }
+
+    public void setIdSeccion(int idSeccion) {
+        this.idSeccion = idSeccion;
+    }
+
+    public String getNombreLeccion() {
+        return nombreLeccion;
+    }
+
+    public void setNombreLeccion(String nombreLeccion) {
+        this.nombreLeccion = nombreLeccion;
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+    public int getOrdenLeccion() {
+        return ordenLeccion;
+    }
+
+    public void setOrdenLeccion(int ordenLeccion) {
+        this.ordenLeccion = ordenLeccion;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public String getUrlVideo() {
+        return urlVideo;
+    }
+
+    public void setUrlVideo(String urlVideo) {
+        this.urlVideo = urlVideo;
+    }
+
+    public List<Material> getMateriales() {
+        return materiales;
+    }
+
+    public void setMateriales(List<Material> materiales) {
+        this.materiales = materiales;
+    }
 }

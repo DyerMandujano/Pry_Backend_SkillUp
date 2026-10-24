@@ -18,9 +18,9 @@ import com.skillup.api.rest.dtos.RegistroRequest;
 import com.skillup.api.rest.service.AuthService;
 
 /**
- * Controlador REST para manejar la autenticación (Login) y el Registro.
- * Esta es la "puerta de entrada" (endpoint) para Angular.
- * Reemplaza a LoginServlet.
+ Controlador REST para manejar la autenticación (Login) y el Registro.
+  Esta es la "puerta de entrada" (endpoint) para Angular.
+  Reemplaza a LoginServlet.
  */
 @RestController // (Spring) Marca esta clase como un Controlador REST (devuelve JSON)
 @RequestMapping("/api/auth") // (Spring) URL base para todos los métodos: http://localhost:8080/api/auth

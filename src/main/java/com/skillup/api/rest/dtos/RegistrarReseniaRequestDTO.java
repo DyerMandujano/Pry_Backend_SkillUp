@@ -23,4 +23,28 @@ public class RegistrarReseniaRequestDTO {
 
     @NotBlank(message = "El comentario de la reseña es obligatorio")
     private String comentario;
+
+    public Integer getIdEstudiante() {
+        return idEstudiante;
+    }
+
+    public void setIdEstudiante(Integer idEstudiante) {
+        this.idEstudiante = idEstudiante;
+    }
+
+    public Integer getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
 }
