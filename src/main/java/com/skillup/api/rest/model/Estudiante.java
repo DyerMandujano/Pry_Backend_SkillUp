@@ -8,11 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data 
-@NoArgsConstructor 
 @Entity 
 @Table(name = "Estudiante") 
 public class Estudiante {
@@ -31,6 +27,16 @@ public class Estudiante {
     
     @Column(name = "Estado")
     private int estado;
+
+    public Estudiante() {
+    }
+
+    public Estudiante(int idEstudiante, int idPersona, String nivelEducativo, int estado) {
+        this.idEstudiante = idEstudiante;
+        this.idPersona = idPersona;
+        this.nivelEducativo = nivelEducativo;
+        this.estado = estado;
+    }
 
     public int getIdEstudiante() {
         return idEstudiante;

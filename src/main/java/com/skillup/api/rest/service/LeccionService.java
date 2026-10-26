@@ -60,18 +60,41 @@ public class LeccionService {
             leccionDB.setEstado(leccionActualizada.getEstado());
             leccionDB.setUrlVideo(leccionActualizada.getUrlVideo());
 
-            // 3. Vaciamos la lista actual (esto elimina de la BD los materiales que el usuario quitó)
-            leccionDB.getMateriales().clear();
-            
-            // 4. Añadimos los materiales que vienen desde Angular
+            // 3. Sincronización segura de materiales
             if (leccionActualizada.getMateriales() != null) {
+                // Eliminar los materiales que el usuario haya quitado en el formulario
+                leccionDB.getMateriales().removeIf(mExistente -> 
+                    leccionActualizada.getMateriales().stream()
+                        .noneMatch(mNuevo -> mNuevo.getIdMaterial() > 0 && mNuevo.getIdMaterial() == mExistente.getIdMaterial())
+                );
+
+                // Actualizar materiales existentes o añadir nuevos
                 for (Material mat : leccionActualizada.getMateriales()) {
-                    mat.setLeccion(leccionDB);
-                    leccionDB.getMateriales().add(mat);
+                    // Ignorar entradas sin URL válida
+                    if (mat.getUrlMaterial() == null || mat.getUrlMaterial().trim().isEmpty()) {
+                        continue;
+                    }
+
+                    if (mat.getIdMaterial() > 0) {
+                        // Actualizar material existente en la lista gestionada por JPA
+                        leccionDB.getMateriales().stream()
+                            .filter(m -> m.getIdMaterial() == mat.getIdMaterial())
+                            .findFirst()
+                            .ifPresent(m -> {
+                                m.setNombreArchivo(mat.getNombreArchivo());
+                                m.setUrlMaterial(mat.getUrlMaterial());
+                            });
+                    } else {
+                        // Crear nuevo material
+                        mat.setLeccion(leccionDB);
+                        leccionDB.getMateriales().add(mat);
+                    }
                 }
+            } else {
+                leccionDB.getMateriales().clear();
             }
 
-            // 5. Guardamos los cambios
+            // 4. Guardamos los cambios
             leccionRepository.save(leccionDB);
         }
     }

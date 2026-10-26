@@ -13,9 +13,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Enlace de la ruta web con la carpeta física
         String uploadPath = Paths.get("uploads").toAbsolutePath().toUri().toString();
+        if (!uploadPath.endsWith("/")) {
+            uploadPath += "/";
+        }
         System.out.println("📂 Carpeta pública mapeada en: " + uploadPath);
         
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(uploadPath);
     }
-}
+}

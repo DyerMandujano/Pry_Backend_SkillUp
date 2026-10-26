@@ -13,8 +13,10 @@ public class LoginResponse {
     private int idUsuario;  
     private int idPersona;  
     
-    
     private Integer idRolEspecifico; // El idDocente o idEstudiante
+
+    public LoginResponse() {
+    }
 
     public LoginResponse(String username, String rol, String nombreCompleto, String token, int idUsuario, int idPersona, Integer idRolEspecifico) {
         this.username = username;
@@ -23,6 +25,62 @@ public class LoginResponse {
         this.token = token;
         this.idUsuario = idUsuario;
         this.idPersona = idPersona;
+        this.idRolEspecifico = idRolEspecifico;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public int getIdPersona() {
+        return idPersona;
+    }
+
+    public void setIdPersona(int idPersona) {
+        this.idPersona = idPersona;
+    }
+
+    public Integer getIdRolEspecifico() {
+        return idRolEspecifico;
+    }
+
+    public void setIdRolEspecifico(Integer idRolEspecifico) {
         this.idRolEspecifico = idRolEspecifico;
     }
 }

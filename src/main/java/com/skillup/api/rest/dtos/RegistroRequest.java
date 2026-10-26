@@ -19,6 +19,9 @@ public class RegistroRequest {
     private Estudiante estudiante; 
     private Docente docente;
 
+    public RegistroRequest() {
+    }
+
     public RegistroRequest(Persona persona, Usuario usuario, Estudiante estudiante, Docente docente) {
         this.persona = persona;
         this.usuario = usuario;

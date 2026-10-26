@@ -17,9 +17,9 @@ import com.skillup.api.rest.dtos.RegistroRequest;
 import com.skillup.api.rest.service.AuthService;
 
 /**
- * Controlador REST para manejar la autenticación (Login) y el Registro.
- * Esta es la "puerta de entrada" (endpoint) para Angular.
- * Reemplaza a LoginServlet.
+ Controlador REST para manejar la autenticación (Login) y el Registro.
+  Esta es la "puerta de entrada" (endpoint) para Angular.
+  Reemplaza a LoginServlet.
  */
 @RestController // (Spring) Marca esta clase como un Controlador REST (devuelve JSON)
 @RequestMapping("/api/auth") // (Spring) URL base para todos los métodos: http://localhost:8080/api/auth
@@ -101,11 +101,9 @@ public class AuthController {
     public ResponseEntity<?> verificarIdentificador(@RequestBody java.util.Map<String, String> body) {
         try {
             String identificador = body != null ? body.get("identificador") : null;
-            String username = authService.verificarIdentificador(identificador);
-            java.util.Map<String, Object> resp = new java.util.HashMap<>();
-            resp.put("mensaje", "Usuario verificado exitosamente");
-            resp.put("username", username);
-            return ResponseEntity.ok(resp);
+            java.util.Map<String, Object> detalle = authService.verificarIdentificadorDetallado(identificador);
+            detalle.put("mensaje", "Usuario verificado exitosamente");
+            return ResponseEntity.ok(detalle);
         } catch (RuntimeException e) {
             java.util.Map<String, String> err = new java.util.HashMap<>();
             err.put("mensaje", e.getMessage());
@@ -114,7 +112,7 @@ public class AuthController {
     }
 
     /**
-     * HU-22: Restablece la contraseña del usuario.
+     * HU-22: Restablece la contraseña del usuario con nueva clave robusta y código SMS opcional.
      * Escucha en: POST http://localhost:8080/api/auth/recuperar-password/cambiar
      */
     @PostMapping("/recuperar-password/cambiar")
@@ -128,6 +126,53 @@ public class AuthController {
             java.util.Map<String, String> err = new java.util.HashMap<>();
             err.put("mensaje", e.getMessage());
             return ResponseEntity.badRequest().body(err);
+        }
+    }
+
+    /**
+     * Endpoint para generar un código OTP vía SMS (válido por 5 minutos).
+     * Escucha en: POST http://localhost:8080/api/auth/sms/generar
+     */
+    @PostMapping("/sms/generar")
+    public ResponseEntity<?> generarCodigoSms(@RequestBody java.util.Map<String, Object> body) {
+        try {
+            String celular = body != null && body.get("celular") != null ? body.get("celular").toString() : null;
+            String tipoOperacion = body != null && body.get("tipoOperacion") != null ? body.get("tipoOperacion").toString() : "REGISTRO";
+            String identificador = body != null && body.get("identificador") != null ? body.get("identificador").toString() : null;
+            Integer idPersona = null;
+
+            // Si se proporciona un identificador (en recuperación), obtener el celular y el idPersona de la cuenta
+            if ((celular == null || celular.trim().isEmpty()) && identificador != null && !identificador.trim().isEmpty()) {
+                java.util.Map<String, Object> detalle = authService.verificarIdentificadorDetallado(identificador);
+                celular = (String) detalle.get("celular");
+                idPersona = (Integer) detalle.get("idPersona");
+                if (celular == null) {
+                    return ResponseEntity.badRequest().body(java.util.Map.of("mensaje", "La cuenta no tiene un número de celular registrado."));
+                }
+            }
+
+            java.util.Map<String, Object> resp = authService.generarCodigoSms(celular, tipoOperacion, idPersona);
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("mensaje", e.getMessage()));
+        }
+    }
+
+    /**
+     * Endpoint para validar el código OTP ingresado por el usuario.
+     * Escucha en: POST http://localhost:8080/api/auth/sms/validar
+     */
+    @PostMapping("/sms/validar")
+    public ResponseEntity<?> validarCodigoSms(@RequestBody java.util.Map<String, String> body) {
+        try {
+            String celular = body != null ? body.get("celular") : null;
+            String codigoIngresado = body != null ? body.get("codigoIngresado") : null;
+            String tipoOperacion = body != null ? body.get("tipoOperacion") : "REGISTRO";
+
+            java.util.Map<String, Object> resp = authService.validarCodigoSms(celular, codigoIngresado, tipoOperacion);
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("mensaje", e.getMessage()));
         }
     }
 }

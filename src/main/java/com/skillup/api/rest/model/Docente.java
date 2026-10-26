@@ -8,11 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data 
-@NoArgsConstructor 
 @Entity 
 @Table(name = "Docente") 
 public class Docente {
@@ -37,6 +33,18 @@ public class Docente {
 
     @Column(name = "Estado")
     private int estado;
+
+    public Docente() {
+    }
+
+    public Docente(int idDocente, int idPersona, String especialidad, String gradoAcademico, String firma, int estado) {
+        this.idDocente = idDocente;
+        this.idPersona = idPersona;
+        this.especialidad = especialidad;
+        this.gradoAcademico = gradoAcademico;
+        this.firma = firma;
+        this.estado = estado;
+    }
 
     public int getIdDocente() {
         return idDocente;

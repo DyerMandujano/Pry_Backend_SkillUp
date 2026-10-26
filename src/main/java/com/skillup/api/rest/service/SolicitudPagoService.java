@@ -1,5 +1,12 @@
 package com.skillup.api.rest.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,13 +14,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.skillup.api.rest.dtos.SolicitudPagoResponseDTO;
 import com.skillup.api.rest.model.Estudiante;
+import com.skillup.api.rest.model.Matricula;
 import com.skillup.api.rest.model.Persona;
 import com.skillup.api.rest.model.SolicitudPago;
 import com.skillup.api.rest.model.Usuario;
 import com.skillup.api.rest.repository.EstudianteRepository;
+import com.skillup.api.rest.repository.MatriculaRepository;
 import com.skillup.api.rest.repository.PersonaRepository;
 import com.skillup.api.rest.repository.SolicitudPagoRepository;
 import com.skillup.api.rest.repository.UsuarioRepository;
@@ -37,6 +47,9 @@ public class SolicitudPagoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private MatriculaRepository matriculaRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -55,47 +68,58 @@ public class SolicitudPagoService {
 
         List<SolicitudPagoResponseDTO> resultado = new ArrayList<>();
         for (SolicitudPago sp : lista) {
-            SolicitudPagoResponseDTO dto = new SolicitudPagoResponseDTO();
-            dto.setIdSolicitud(sp.getIdSolicitud());
-            dto.setIdEstudiante(sp.getIdEstudiante());
-            dto.setIdUsuario(sp.getIdUsuario());
-            dto.setNumOperacion(sp.getNumOperacion());
-            dto.setMonto(sp.getMonto());
-            dto.setMetodoPago(sp.getMetodoPago());
-            dto.setFechaSubida(sp.getFechaSubida());
-            dto.setFechaRevision(sp.getFechaRevision());
-            dto.setObservacion(sp.getObservacion());
-            dto.setImagenComprobante(sp.getImagenComprobante());
-            dto.setEstado(sp.getEstado());
-
-            // Enriquecer datos con el Estudiante / Persona / Usuario
-            try {
-                Estudiante est = entityManager.find(Estudiante.class, sp.getIdEstudiante());
-                if (est != null) {
-                    Persona p = entityManager.find(Persona.class, est.getIdPersona());
-                    if (p != null) {
-                        dto.setEstudianteNombre(p.getNombres() + " " + p.getApellidos());
-                        dto.setEstudianteDni(p.getDni());
-                    }
-                    TypedQuery<Usuario> uQuery = entityManager.createQuery(
-                        "SELECT u FROM Usuario u WHERE u.idPersona = :idp", Usuario.class
-                    );
-                    uQuery.setParameter("idp", est.getIdPersona());
-                    List<Usuario> uList = uQuery.getResultList();
-                    if (!uList.isEmpty()) {
-                        dto.setUsername(uList.get(0).getUsername());
-                        if (dto.getIdUsuario() == null) {
-                            dto.setIdUsuario(uList.get(0).getIdUsuario());
-                        }
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-
-            resultado.add(dto);
+            resultado.add(convertirADTO(sp));
         }
 
         return resultado;
+    }
+
+    public List<SolicitudPagoResponseDTO> listarSolicitudesPorEstudiante(int idEstudiante) {
+        List<SolicitudPago> lista = solicitudPagoRepository.findByIdEstudianteOrderByFechaSubidaDesc(idEstudiante);
+        List<SolicitudPagoResponseDTO> resultado = new ArrayList<>();
+        for (SolicitudPago sp : lista) {
+            resultado.add(convertirADTO(sp));
+        }
+        return resultado;
+    }
+
+    private SolicitudPagoResponseDTO convertirADTO(SolicitudPago sp) {
+        SolicitudPagoResponseDTO dto = new SolicitudPagoResponseDTO();
+        dto.setIdSolicitud(sp.getIdSolicitud());
+        dto.setIdEstudiante(sp.getIdEstudiante());
+        dto.setIdUsuario(sp.getIdUsuario());
+        dto.setNumOperacion(sp.getNumOperacion());
+        dto.setMonto(sp.getMonto());
+        dto.setMetodoPago(sp.getMetodoPago());
+        dto.setFechaSubida(sp.getFechaSubida());
+        dto.setFechaRevision(sp.getFechaRevision());
+        dto.setObservacion(sp.getObservacion());
+        dto.setImagenComprobante(sp.getImagenComprobante());
+        dto.setEstado(sp.getEstado());
+
+        try {
+            Estudiante est = entityManager.find(Estudiante.class, sp.getIdEstudiante());
+            if (est != null) {
+                Persona p = entityManager.find(Persona.class, est.getIdPersona());
+                if (p != null) {
+                    dto.setEstudianteNombre(p.getNombres() + " " + p.getApellidos());
+                    dto.setEstudianteDni(p.getDni());
+                }
+                TypedQuery<Usuario> uQuery = entityManager.createQuery(
+                    "SELECT u FROM Usuario u WHERE u.idPersona = :idp", Usuario.class
+                );
+                uQuery.setParameter("idp", est.getIdPersona());
+                List<Usuario> uList = uQuery.getResultList();
+                if (!uList.isEmpty()) {
+                    dto.setUsername(uList.get(0).getUsername());
+                    if (dto.getIdUsuario() == null) {
+                        dto.setIdUsuario(uList.get(0).getIdUsuario());
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return dto;
     }
 
     @Transactional
@@ -107,7 +131,7 @@ public class SolicitudPagoService {
         solicitud.setFechaRevision(new Date());
         solicitudPagoRepository.save(solicitud);
 
-        // Reactivar la cuenta del estudiante (estado = 1)
+        // 1. Reactivar la cuenta del estudiante (estado = 1) y persona (estado = 1)
         try {
             Estudiante est = entityManager.find(Estudiante.class, solicitud.getIdEstudiante());
             if (est != null) {
@@ -119,9 +143,23 @@ public class SolicitudPagoService {
                     persona.setEstado(1);
                     entityManager.merge(persona);
                 }
+
+                // 2. Desbloquear usuario si estaba bloqueado
+                usuarioRepository.findByIdPersona(est.getIdPersona()).ifPresent(u -> {
+                    u.setIntentosFallidos(0);
+                    u.setFecBloqueoHasta(null);
+                    usuarioRepository.save(u);
+                });
+
+                // 3. Restablecer los intentos de evaluación en Matricula (Intentos_Examen = 2)
+                List<Matricula> matriculas = matriculaRepository.findByIdEstudiante(solicitud.getIdEstudiante());
+                for (Matricula m : matriculas) {
+                    m.setIntentosExamen(2);
+                    matriculaRepository.save(m);
+                }
             }
         } catch (Exception e) {
-            // Log si ocurre excepción pero la solicitud queda guardada
+            e.printStackTrace();
         }
 
         return solicitud;
@@ -155,5 +193,51 @@ public class SolicitudPagoService {
         solicitud.setFechaSubida(new Date());
         solicitud.setEstado("Pendiente");
         return solicitudPagoRepository.save(solicitud);
+    }
+
+    @Transactional
+    public SolicitudPago registrarSolicitudConComprobante(
+            int idEstudiante,
+            String numOperacion,
+            BigDecimal monto,
+            String metodoPago,
+            String observacion,
+            MultipartFile comprobante) {
+
+        if (numOperacion == null || numOperacion.trim().isEmpty()) {
+            throw new RuntimeException("El número de operación es obligatorio");
+        }
+        if (monto == null || monto.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("El monto debe ser mayor a 0");
+        }
+        if (metodoPago == null || metodoPago.trim().isEmpty()) {
+            throw new RuntimeException("El método de pago es obligatorio");
+        }
+
+        SolicitudPago sp = new SolicitudPago();
+        sp.setIdEstudiante(idEstudiante);
+        sp.setNumOperacion(numOperacion.trim());
+        sp.setMonto(monto);
+        sp.setMetodoPago(metodoPago.trim());
+        sp.setObservacion(observacion != null ? observacion.trim() : null);
+        sp.setFechaSubida(new Date());
+        sp.setEstado("Pendiente");
+
+        if (comprobante != null && !comprobante.isEmpty()) {
+            String uploadDir = "uploads/";
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fileName = "pago_" + System.currentTimeMillis() + "_" + comprobante.getOriginalFilename().replaceAll("\\s+", "_");
+            Path filePath = Paths.get(uploadDir + fileName);
+            try {
+                Files.copy(comprobante.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                sp.setImagenComprobante(uploadDir + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar el comprobante de pago: " + e.getMessage());
+            }
+        }
+
+        return solicitudPagoRepository.save(sp);
     }
 }

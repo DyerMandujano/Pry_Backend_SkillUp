@@ -45,4 +45,92 @@ public class MatriculaSeguimientoDTO {
 
     public MatriculaSeguimientoDTO() {
     }
+
+    public int getIdMatricula() {
+        return idMatricula;
+    }
+
+    public void setIdMatricula(int idMatricula) {
+        this.idMatricula = idMatricula;
+    }
+
+    public int getIdEstudiante() {
+        return idEstudiante;
+    }
+
+    public void setIdEstudiante(int idEstudiante) {
+        this.idEstudiante = idEstudiante;
+    }
+
+    public String getEstudianteNombre() {
+        return estudianteNombre;
+    }
+
+    public void setEstudianteNombre(String estudianteNombre) {
+        this.estudianteNombre = estudianteNombre;
+    }
+
+    public String getEstudianteDni() {
+        return estudianteDni;
+    }
+
+    public void setEstudianteDni(String estudianteDni) {
+        this.estudianteDni = estudianteDni;
+    }
+
+    public String getEstudianteUsername() {
+        return estudianteUsername;
+    }
+
+    public void setEstudianteUsername(String estudianteUsername) {
+        this.estudianteUsername = estudianteUsername;
+    }
+
+    public int getIdCurso() {
+        return idCurso;
+    }
+
+    public void setIdCurso(int idCurso) {
+        this.idCurso = idCurso;
+    }
+
+    public String getNombreCurso() {
+        return nombreCurso;
+    }
+
+    public void setNombreCurso(String nombreCurso) {
+        this.nombreCurso = nombreCurso;
+    }
+
+    public Date getFechaMatricula() {
+        return fechaMatricula;
+    }
+
+    public void setFechaMatricula(Date fechaMatricula) {
+        this.fechaMatricula = fechaMatricula;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public String getEstadoDescripcion() {
+        return estadoDescripcion;
+    }
+
+    public void setEstadoDescripcion(String estadoDescripcion) {
+        this.estadoDescripcion = estadoDescripcion;
+    }
+
+    public int getPorcentajeAvance() {
+        return porcentajeAvance;
+    }
+
+    public void setPorcentajeAvance(int porcentajeAvance) {
+        this.porcentajeAvance = porcentajeAvance;
+    }
 }

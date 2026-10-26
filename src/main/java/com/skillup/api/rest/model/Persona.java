@@ -13,11 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data 
-@NoArgsConstructor 
 @Entity 
 @Table(name = "Persona") 
 public class Persona {
@@ -48,6 +44,29 @@ public class Persona {
     
     @Column(name = "Estado")
     private int estado;
+
+    @Column(name = "Celular")
+    @JsonProperty("celular")
+    private String celular;
+
+    @Column(name = "Celular_Verificado")
+    @JsonProperty("celular_verificado")
+    private Boolean celularVerificado;
+
+    public Persona() {
+    }
+
+    public Persona(int idPersona, String nombres, String apellidos, String dni, Date fechaDeNacimiento, String genero, int estado, String celular, Boolean celularVerificado) {
+        this.idPersona = idPersona;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.dni = dni;
+        this.fechaDeNacimiento = fechaDeNacimiento;
+        this.genero = genero;
+        this.estado = estado;
+        this.celular = celular;
+        this.celularVerificado = celularVerificado;
+    }
 
     public int getIdPersona() {
         return idPersona;
@@ -103,5 +122,21 @@ public class Persona {
 
     public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public Boolean getCelularVerificado() {
+        return celularVerificado;
+    }
+
+    public void setCelularVerificado(Boolean celularVerificado) {
+        this.celularVerificado = celularVerificado;
     }
 }

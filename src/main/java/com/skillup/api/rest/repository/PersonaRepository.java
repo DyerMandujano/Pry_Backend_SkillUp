@@ -2,6 +2,7 @@ package com.skillup.api.rest.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -12,6 +13,9 @@ import com.skillup.api.rest.model.Persona;
 
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
+    
+    Optional<Persona> findByDni(String dni);
+    boolean existsByDni(String dni);
     
    
     // 1. Reemplazo de SP_ListarPersonas

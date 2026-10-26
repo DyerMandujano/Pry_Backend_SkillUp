@@ -27,9 +27,11 @@ public class CertificadoController {
     @Autowired
     private CertificadoService certificadoService;
 
-    
     @Autowired
     private CertificadoRepository certificadoRepository;
+
+    @Autowired
+    private com.skillup.api.rest.service.EvaluacionCursoService evaluacionCursoService;
 
 
     @GetMapping("/estudiante/{id}")
@@ -41,7 +43,11 @@ public class CertificadoController {
     @PostMapping("/generar")
     public ResponseEntity<?> generarOObtenerCertificado(@RequestParam int idEstudiante, @RequestParam int idCurso) {
         
-       
+        // Validar que el estudiante haya contestado todas las preguntas correctamente
+        if (!evaluacionCursoService.haAprobadoEvaluacion(idEstudiante, idCurso)) {
+            return ResponseEntity.badRequest().body("No puedes obtener el certificado. Debes contestar todas las preguntas de la evaluación correctamente.");
+        }
+
         Optional<Certificado> certificadoExistente = certificadoRepository.findByEstudianteAndCurso(idEstudiante, idCurso);
 
         if (certificadoExistente.isPresent()) {

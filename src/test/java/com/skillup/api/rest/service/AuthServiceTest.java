@@ -106,7 +106,7 @@ public class AuthServiceTest {
             authService.registrarUsuario(requestValido);
         });
 
-        assertTrue(ex.getMessage().contains("mínimo 6 dígitos"));
+        assertTrue(ex.getMessage().contains("mínimo 8"));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("CP-08 [HU-22 Negativo]: Recuperación falla si la contraseña tiene menos de 6 caracteres")
+    @DisplayName("CP-08 [HU-22 Negativo]: Recuperación falla si la contraseña tiene menos de 8 caracteres")
     void testRecuperarContraseniaExcedeLongitud() {
         RecuperarPasswordDTO dto = new RecuperarPasswordDTO("cmendoza", "12345", "12345");
 
@@ -154,7 +154,7 @@ public class AuthServiceTest {
             authService.restablecerContrasenia(dto);
         });
 
-        assertTrue(ex.getMessage().contains("mínimo 6 dígitos"));
+        assertTrue(ex.getMessage().contains("mínimo 8"));
     }
 
     @Test
@@ -235,5 +235,46 @@ public class AuthServiceTest {
         });
 
         assertEquals("Credenciales incorrectas.", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("CP-13b [Login Bloqueo]: Login falla si la cuenta fue inactivada temporalmente por 30 minutos")
+    void testLoginCuentaInactivaPorBloqueo() {
+        when(storedProcedureQuery.getOutputParameterValue("es_valido")).thenReturn(false);
+        when(storedProcedureQuery.getOutputParameterValue("mensaje"))
+            .thenReturn("Cuenta inactiva por seguridad durante 30 minutos debido a 3 intentos fallidos.");
+
+        LoginRequest loginReq = new LoginRequest("76543210@skillup.pe", "clave_errada");
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            authService.validarLogin(loginReq);
+        });
+
+        assertTrue(ex.getMessage().contains("Cuenta inactiva por seguridad"));
+        assertTrue(ex.getMessage().contains("30 minutos"));
+    }
+
+    @Test
+    @DisplayName("CP-14 [SMS OTP]: Generación exitosa de código SMS OTP")
+    void testGenerarCodigoSmsExitoso() {
+        when(storedProcedureQuery.getOutputParameterValue("resultado")).thenReturn(0);
+        when(storedProcedureQuery.getOutputParameterValue("mensaje")).thenReturn("Código SMS generado exitosamente.");
+        when(storedProcedureQuery.getOutputParameterValue("codigo_generado")).thenReturn("123456");
+
+        java.util.Map<String, Object> resp = authService.generarCodigoSms("987654321", "REGISTRO", null);
+
+        assertNotNull(resp);
+        assertEquals(0, resp.get("resultado"));
+        assertEquals("123456", resp.get("codigoSmsSimulado"));
+    }
+
+    @Test
+    @DisplayName("CP-15 [SMS OTP Negativo]: Rechaza celular que no cumple formato de 9 dígitos de Perú")
+    void testGenerarCodigoSmsCelularInvalido() {
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            authService.generarCodigoSms("12345", "REGISTRO", null);
+        });
+
+        assertTrue(ex.getMessage().contains("exactamente 9 dígitos"));
     }
 }

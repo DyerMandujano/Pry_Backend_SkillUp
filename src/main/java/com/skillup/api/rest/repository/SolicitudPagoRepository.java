@@ -11,4 +11,5 @@ import com.skillup.api.rest.model.SolicitudPago;
 public interface SolicitudPagoRepository extends JpaRepository<SolicitudPago, Integer> {
     List<SolicitudPago> findByEstadoOrderByFechaSubidaDesc(String estado);
     List<SolicitudPago> findByIdEstudiante(int idEstudiante);
+    List<SolicitudPago> findByIdEstudianteOrderByFechaSubidaDesc(int idEstudiante);
 }

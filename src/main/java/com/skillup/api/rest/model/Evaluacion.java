@@ -32,6 +32,46 @@ public class Evaluacion {
     @Column(name = "Estado")
     private int estado;
 
+    public Evaluacion() {
+    }
 
+    public int getIdEvaluacion() {
+        return idEvaluacion;
+    }
+
+    public void setIdEvaluacion(int idEvaluacion) {
+        this.idEvaluacion = idEvaluacion;
+    }
+
+    public int getIdSeccion() {
+        return idSeccion;
+    }
+
+    public void setIdSeccion(int idSeccion) {
+        this.idSeccion = idSeccion;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public int getEstado() {
+        return estado;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
 }
-
