@@ -6,10 +6,8 @@ import com.skillup.api.rest.model.Persona;
 import com.skillup.api.rest.model.Usuario;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class RegistroRequest {
 
     private Persona persona;
