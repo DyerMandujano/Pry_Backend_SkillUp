@@ -54,3 +54,7 @@ Thumbs.db
 application-local.properties
 application-dev.properties
 *.env
+ 
+*.py
+__pycache__/
+setup_image.png
