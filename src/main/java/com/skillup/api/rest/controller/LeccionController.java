@@ -88,42 +88,53 @@ public class LeccionController {
         }
     }
 
-    // 🛠️ FUNCIÓN UTILITARIA: Guarda los archivos en el disco duro y asigna la URL
+        // 🛠️ FUNCIÓN UTILITARIA: Guarda los archivos en el disco duro y asigna la URL (Refactorizado: máx. anidamiento <= 2)
     private void guardarArchivosFisicos(Leccion leccion, List<MultipartFile> archivos) {
-        if (archivos != null && !archivos.isEmpty() && leccion.getMateriales() != null) {
-            
-            // Crea una carpeta llamada "uploads" en la raíz del backend si no existe
-            String uploadDir = "uploads/"; 
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdirs();
+        // Cláusula de guarda para evitar anidamiento innecesario (Nivel 1)
+        if (archivos == null || archivos.isEmpty() || leccion.getMateriales() == null) {
+            return;
+        }
 
-            int archivoIndex = 0;
-            
-            for (int i = 0; i < leccion.getMateriales().size(); i++) {
-                com.skillup.api.rest.model.Material mat = leccion.getMateriales().get(i);
-                // Solo procesamos si no tiene URL o se marcó vacía para subir nuevo archivo
-                if (mat.getUrlMaterial() == null || mat.getUrlMaterial().trim().isEmpty()) {
-                    if (archivoIndex < archivos.size()) {
-                        MultipartFile file = archivos.get(archivoIndex);
-                        try {
-                            // Generamos un nombre único para evitar sobreescribir archivos con el mismo nombre
-                            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                            Path filePath = Paths.get(uploadDir + fileName);
-                            
-                            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                            
-                            // Guardamos la ruta relativa en el objeto que irá a SQL Server
-                            mat.setUrlMaterial(uploadDir + fileName);
-                            if (mat.getNombreArchivo() == null || mat.getNombreArchivo().trim().isEmpty()) {
-                                mat.setNombreArchivo(file.getOriginalFilename());
-                            }
-                            archivoIndex++;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+        // Crea una carpeta llamada "uploads" en la raíz del backend si no existe
+        String uploadDir = "uploads/";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        int archivoIndex = 0;
+
+        for (com.skillup.api.rest.model.Material mat : leccion.getMateriales()) {
+            if (archivoIndex >= archivos.size()) {
+                break;
             }
+
+            // Solo procesamos si no tiene URL o se marcó vacía para subir nuevo archivo
+            if (mat.getUrlMaterial() != null && !mat.getUrlMaterial().trim().isEmpty()) {
+                continue;
+            }
+
+            MultipartFile file = archivos.get(archivoIndex);
+            guardarArchivoEnDisco(mat, file, uploadDir);
+            archivoIndex++;
+        }
+    }
+
+    private void guardarArchivoEnDisco(com.skillup.api.rest.model.Material mat, MultipartFile file, String uploadDir) {
+        try {
+            // Generamos un nombre único para evitar sobreescribir archivos con el mismo nombre
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir + fileName);
+
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Guardamos la ruta relativa en el objeto que irá a SQL Server
+            mat.setUrlMaterial(uploadDir + fileName);
+            if (mat.getNombreArchivo() == null || mat.getNombreArchivo().trim().isEmpty()) {
+                mat.setNombreArchivo(file.getOriginalFilename());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
