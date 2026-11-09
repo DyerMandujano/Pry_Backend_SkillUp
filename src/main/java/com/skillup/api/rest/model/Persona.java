@@ -2,6 +2,7 @@ package com.skillup.api.rest.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,6 +38,7 @@ public class Persona {
     @Temporal(TemporalType.DATE) 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("fecha_nacimiento")
+    @JsonAlias({"fechaDeNacimiento", "fecha_nacimiento", "fechaNacimiento"})
     private Date fechaDeNacimiento;
     
     @Column(name = "Genero")
@@ -106,6 +108,13 @@ public class Persona {
 
     public void setFechaDeNacimiento(Date fechaDeNacimiento) {
         this.fechaDeNacimiento = fechaDeNacimiento;
+    }
+
+    @JsonProperty("fechaDeNacimiento")
+    public String getFechaDeNacimientoString() {
+        if (this.fechaDeNacimiento == null) return null;
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(this.fechaDeNacimiento);
     }
 
     public String getGenero() {

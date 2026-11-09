@@ -49,7 +49,8 @@ public class UsuarioServiceTest {
         persona.setNombres("Carlos");
         persona.setApellidos("García");
         persona.setDni("87654321");
-        persona.setFechaDeNacimiento(new Date());
+        // Fecha válida con más de 12 años de edad (año 2000)
+        persona.setFechaDeNacimiento(java.sql.Date.valueOf("2000-01-01"));
         persona.setGenero("M");
         persona.setEstado(1);
     }
@@ -96,6 +97,7 @@ public class UsuarioServiceTest {
         verify(storedProcedureQuery).setParameter("id", 10);
         verify(storedProcedureQuery).setParameter("nombres", "Carlos");
         verify(storedProcedureQuery).setParameter("apellidos", "García");
+        verify(storedProcedureQuery).setParameter("dni", "87654321");
         verify(storedProcedureQuery).execute();
     }
 
@@ -108,6 +110,17 @@ public class UsuarioServiceTest {
             usuarioService.actualizarPerfil(10, persona);
         });
         assertEquals("El nombre no puede estar vacío", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("CP-USUARIO-04B [Negativo]: Actualizar perfil con fecha menor a 12 años lanza RuntimeException")
+    void testActualizarPerfil_FechaMenorDeEdad() {
+        persona.setFechaDeNacimiento(new Date()); // Fecha de hoy (0 años)
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            usuarioService.actualizarPerfil(10, persona);
+        });
+        assertEquals("La fecha de nacimiento no puede ser la fecha actual ni una fecha futura, y debe tener al menos 12 años de edad.", ex.getMessage());
     }
 
     @Test
