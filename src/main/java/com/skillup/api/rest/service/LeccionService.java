@@ -59,6 +59,12 @@ public class LeccionService {
             leccionDB.setOrdenLeccion(leccionActualizada.getOrdenLeccion());
             leccionDB.setEstado(leccionActualizada.getEstado());
             leccionDB.setUrlVideo(leccionActualizada.getUrlVideo());
+            if (leccionActualizada.getUrlSubtitulos() != null) {
+                leccionDB.setUrlSubtitulos(leccionActualizada.getUrlSubtitulos());
+            }
+            if (leccionActualizada.getTranscripcionTexto() != null) {
+                leccionDB.setTranscripcionTexto(leccionActualizada.getTranscripcionTexto());
+            }
 
             // 3. Sincronización segura de materiales
             if (leccionActualizada.getMateriales() != null) {

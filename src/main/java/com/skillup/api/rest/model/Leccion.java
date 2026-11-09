@@ -41,6 +41,12 @@ public class Leccion {
     @Column(name = "url_video", length = 500)
     private String urlVideo;
 
+    @Column(name = "url_subtitulos", length = 500)
+    private String urlSubtitulos;
+
+    @Column(name = "transcripcion_texto", columnDefinition = "NVARCHAR(MAX)")
+    private String transcripcionTexto;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materiales;
@@ -111,4 +117,21 @@ public class Leccion {
     public void setMateriales(List<Material> materiales) {
         this.materiales = materiales;
     }
+
+    public String getUrlSubtitulos() {
+        return urlSubtitulos;
+    }
+
+    public void setUrlSubtitulos(String urlSubtitulos) {
+        this.urlSubtitulos = urlSubtitulos;
+    }
+
+    public String getTranscripcionTexto() {
+        return transcripcionTexto;
+    }
+
+    public void setTranscripcionTexto(String transcripcionTexto) {
+        this.transcripcionTexto = transcripcionTexto;
+    }
+
 }
